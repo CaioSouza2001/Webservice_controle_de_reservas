@@ -79,13 +79,21 @@ public class DbAccessor {
         }
     }
 
-    /*public TbUsuario getCredencials(String email) {
-        try {
-            return (TbUsuario) this.manager.createNamedQuery("TbUsuario.findByEmail").setParameter("email", email).getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
-    }*/
+    
+    public TbReserva getReservaById(int id)
+    {
+        TbReserva reserva = (TbReserva) this.manager.createNamedQuery("TbReserva.findById")
+                .setParameter("id", id).getSingleResult();
+        
+        reserva.setChave_organizador(reserva.getIdOrganizador().getEmail());
+        reserva.setChave_sala(reserva.getIdSala().getId());
+        
+        reserva.setIdOrganizador(null);
+        reserva.setIdSala(null);
+        
+        return reserva;
+    }
+   
     public List<TbEmpresa> getAllOrganizacoes() {
         try {
             List<TbEmpresa> empresas = this.manager.createNamedQuery("TbEmpresa.findAll").getResultList();
@@ -436,6 +444,8 @@ public class DbAccessor {
             this.manager.getTransaction().commit();
         }
     }
+    
+    
 
     public void novoUsuario(TbUsuario usuario) {
         synchronized (this.operationLock) {
@@ -444,6 +454,16 @@ public class DbAccessor {
             this.manager.getTransaction().commit();
         }
     }
+    
+    public void novaReserva(TbReserva reserva) {
+        synchronized (this.operationLock) {
+            this.manager.getTransaction().begin();
+            this.manager.persist(reserva);
+            this.manager.getTransaction().commit();
+        }
+    }
+    
+  
 //
 //    public void modificaUsuario(Usuario usuario) {
 //        synchronized (this.operationLock) {

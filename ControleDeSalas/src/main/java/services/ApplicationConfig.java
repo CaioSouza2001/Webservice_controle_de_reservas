@@ -18,6 +18,7 @@ public class ApplicationConfig extends Application {
         resources.add(services.CORSFilter.class);
         resources.add(services.EnderecoService.class);
         resources.add(services.OrganizacaoService.class);
+        resources.add(services.ReservaService.class);
         resources.add(services.SalaService.class);
         resources.add(services.UsuarioService.class);
     }
