@@ -32,7 +32,6 @@ public class EnderecoService {
             @HeaderParam("cep") String cep) {
 
           TbEndereco endereco = EManager.getInstance().getDbAccessor().getEnderecoByCEP(cep);
-          
           endereco.setTbEmpresaList(null);
           return endereco;
     }

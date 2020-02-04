@@ -55,8 +55,10 @@ public class UsuarioService {
             //user.setTbEmpresaList(null);
             //user.setTbReservaList(null);
             if (user != null) {
+                
                 user.setCnpjEmpresa(null);
                 user.setTbReservaList(null);
+              
                 return user;
             } else {
                 return null;
@@ -113,6 +115,9 @@ public class UsuarioService {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                 //sdf.setTimeZone(TimeZone.getTimeZone("UTC3"));
                 Date date = new Date();
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.HOUR_OF_DAY, -3);
+                date = calendar.getTime();
 
                 novoUsuario.setCriacao(date);
                 novoUsuario.setUltimaModificacao(date);

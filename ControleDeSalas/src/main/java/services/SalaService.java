@@ -27,34 +27,30 @@ public class SalaService {
             for (int indice = 0; indice < empresa.getTbSalaList().size(); indice++) {
                 empresa.getTbSalaList().get(indice).setIdEmpresa(null);
                 empresa.getTbSalaList().get(indice).setTbReservaList(null);
+
             }
             return empresa.getTbSalaList();
         } else {
             return null;
         }
     }
-    
+
     @GET
     @Path("encontrarSalasEmpresaFuncionario")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public List<TbSala> encontrarEmpresaFuncionario(@HeaderParam("authorization") String authorization,
-            @HeaderParam("ids") List<Integer> ids) {
-     
+            @HeaderParam("id") Integer id) {
+
         List<TbSala> salas = new ArrayList<>();
-        
-        for(int id : ids)
-        {
-            salas.add(EManager.getInstance().getDbAccessor().getSalaById(id));
-        }
-        
-        for(TbSala sala : salas)
-        {
+
+        salas.add(EManager.getInstance().getDbAccessor().getSalaById(id));
+
+        for (TbSala sala : salas) {
             sala.setIdEmpresa(null);
             sala.setTbReservaList(null);
         }
-        
-        return  salas;
-    }
 
+        return salas;
+    }
 
 }
