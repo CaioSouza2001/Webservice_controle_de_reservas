@@ -27,6 +27,7 @@ public class OrganizacaoService {
                 lista.get(i).setTbSalaList(null);
                 lista.get(i).setTbUsuarioList(null);
                 lista.get(i).setIdFilial(null);
+                lista.get(i).setEndereco(null);
             }
             return lista;
         }
@@ -45,27 +46,11 @@ public class OrganizacaoService {
             empresa.setTbSalaList(null);
             empresa.setTbUsuarioList(null);
             empresa.setIdFilial(null);
+            empresa.setEndereco(null);
 
             return empresa;
         }
         return null;
-    }
-
-    @GET
-    @Path("encontrarEmpresaFuncionario")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public TbEmpresa encontrarEmpresaFuncionario(@HeaderParam("authorization") String authorization,
-            @HeaderParam("email") String email) {
-        TbUsuario user = EManager.getInstance().getDbAccessor().getUserByEmail(email);
-        TbEmpresa empresa = EManager.getInstance().getDbAccessor().getOrganizacaoById(user.getCnpjEmpresa().getCnpj());
-
-        empresa.setTbEmpresaList(null);
-        empresa.setTbSalaList(null);
-        empresa.setTbUsuarioList(null);
-        empresa.setIdFilial(null);
-        empresa.getEndereco().setTbEmpresaList(null);
-        return empresa;
-
     }
 
 }

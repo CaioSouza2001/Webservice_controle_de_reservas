@@ -74,6 +74,9 @@ public class TbUsuario implements Serializable {
     private TbEmpresa cnpjEmpresa;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idOrganizador")
     private List<TbReserva> tbReservaList;
+   
+    private String chave_empresa;
+    private List<Integer> listaChaveReservas;
 
     public TbUsuario() {
     }
@@ -137,6 +140,24 @@ public class TbUsuario implements Serializable {
     public void setCnpjEmpresa(TbEmpresa cnpjEmpresa) {
         this.cnpjEmpresa = cnpjEmpresa;
     }
+
+    public String getChave_empresa() {
+        return chave_empresa;
+    }
+
+    public void setChave_empresa(String chave_empresa) {
+        this.chave_empresa = chave_empresa;
+    }
+
+    public List<Integer> getListaChaveReservas() {
+        return listaChaveReservas;
+    }
+
+    public void setListaChaveReservas(List<Integer> listaChaveReservas) {
+        this.listaChaveReservas = listaChaveReservas;
+    }
+    
+    
 
     @XmlTransient
     public List<TbReserva> getTbReservaList() {

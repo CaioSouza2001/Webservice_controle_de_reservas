@@ -102,6 +102,9 @@ public class TbSala implements Serializable {
     @JoinColumn(name = "id_empresa", referencedColumnName = "cnpj")
     @ManyToOne(optional = false)
     private TbEmpresa idEmpresa;
+    
+    private List<Integer> listaIdReservas;
+    private String chave_empresa;
 
     public TbSala() {
     }
@@ -232,6 +235,24 @@ public class TbSala implements Serializable {
     public void setIdEmpresa(TbEmpresa idEmpresa) {
         this.idEmpresa = idEmpresa;
     }
+
+    public List<Integer> getListaIdReservas() {
+        return listaIdReservas;
+    }
+
+    public void setListaIdReservas(List<Integer> listaIdReservas) {
+        this.listaIdReservas = listaIdReservas;
+    }
+
+    public String getChave_empresa() {
+        return chave_empresa;
+    }
+
+    public void setChave_empresa(String chave_empresa) {
+        this.chave_empresa = chave_empresa;
+    }
+    
+    
 
     @Override
     public int hashCode() {

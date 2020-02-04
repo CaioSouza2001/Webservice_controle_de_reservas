@@ -4,6 +4,7 @@ import database.EManager;
 import entidades.TbEmpresa;
 import entidades.TbSala;
 import entidades.TbUsuario;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
@@ -37,15 +38,22 @@ public class SalaService {
     @Path("encontrarSalasEmpresaFuncionario")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public List<TbSala> encontrarEmpresaFuncionario(@HeaderParam("authorization") String authorization,
-            @HeaderParam("email") String email) {
-        TbUsuario user = EManager.getInstance().getDbAccessor().getUserByEmail(email);
-       
-        for(int indice = 0; indice < user.getCnpjEmpresa().getTbSalaList().size(); indice++)
+            @HeaderParam("ids") List<Integer> ids) {
+     
+        List<TbSala> salas = new ArrayList<>();
+        
+        for(int id : ids)
         {
-             user.getCnpjEmpresa().getTbSalaList().get(indice).setIdEmpresa(null);
-             user.getCnpjEmpresa().getTbSalaList().get(indice).setTbReservaList(null);
+            salas.add(EManager.getInstance().getDbAccessor().getSalaById(id));
         }
-        return  user.getCnpjEmpresa().getTbSalaList();
+        
+        for(TbSala sala : salas)
+        {
+            sala.setIdEmpresa(null);
+            sala.setTbReservaList(null);
+        }
+        
+        return  salas;
     }
 
 

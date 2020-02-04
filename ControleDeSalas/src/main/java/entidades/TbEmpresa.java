@@ -111,6 +111,11 @@ public class TbEmpresa implements Serializable {
     private TbEndereco endereco;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idEmpresa")
     private List<TbSala> tbSalaList;
+    
+    private List<String> chave_usuarios;
+    private List<String> chave_filiais;
+    private List<Integer> chave_salas;
+    private String chave_endereco;
 
     public TbEmpresa() {
     }
@@ -218,6 +223,42 @@ public class TbEmpresa implements Serializable {
         this.ativo = ativo;
     }
 
+    public List<String> getChave_usuarios() {
+        return chave_usuarios;
+    }
+
+    public void setChave_usuarios(List<String> chave_usuarios) {
+        this.chave_usuarios = chave_usuarios;
+    }
+
+    public List<String> getChave_filiais() {
+        return chave_filiais;
+    }
+
+    public void setChave_filiais(List<String> chave_filiais) {
+        this.chave_filiais = chave_filiais;
+    }
+
+    public List<Integer> getChave_salas() {
+        return chave_salas;
+    }
+
+    public void setChave_salas(List<Integer> chave_salas) {
+        this.chave_salas = chave_salas;
+    }
+
+    public String getChave_endereco() {
+        return chave_endereco;
+    }
+
+    public void setChave_endereco(String chave_endereco) {
+        this.chave_endereco = chave_endereco;
+    }
+    
+    
+    
+    
+
     @XmlTransient
     public List<TbUsuario> getTbUsuarioList() {
         return tbUsuarioList;
@@ -260,6 +301,13 @@ public class TbEmpresa implements Serializable {
     public void setTbSalaList(List<TbSala> tbSalaList) {
         this.tbSalaList = tbSalaList;
     }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+    
+    
+    
 
     @Override
     public int hashCode() {

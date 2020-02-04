@@ -79,6 +79,9 @@ public class TbReserva implements Serializable {
     @JoinColumn(name = "id_organizador", referencedColumnName = "email")
     @ManyToOne(optional = false)
     private TbUsuario idOrganizador;
+    
+    private int chave_sala;
+    private String chave_organizador;
 
     public TbReserva() {
     }
@@ -166,6 +169,24 @@ public class TbReserva implements Serializable {
     public void setIdOrganizador(TbUsuario idOrganizador) {
         this.idOrganizador = idOrganizador;
     }
+
+    public int getChave_sala() {
+        return chave_sala;
+    }
+
+    public void setChave_sala(int chave_sala) {
+        this.chave_sala = chave_sala;
+    }
+
+    public String getChave_organizador() {
+        return chave_organizador;
+    }
+
+    public void setChave_organizador(String chave_organizador) {
+        this.chave_organizador = chave_organizador;
+    }
+    
+    
 
     @Override
     public int hashCode() {

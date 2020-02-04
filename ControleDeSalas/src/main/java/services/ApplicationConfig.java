@@ -16,6 +16,7 @@ public class ApplicationConfig extends Application {
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(org.glassfish.jersey.server.wadl.internal.WadlResource.class);
         resources.add(services.CORSFilter.class);
+        resources.add(services.EnderecoService.class);
         resources.add(services.OrganizacaoService.class);
         resources.add(services.SalaService.class);
         resources.add(services.UsuarioService.class);

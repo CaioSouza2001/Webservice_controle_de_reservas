@@ -76,6 +76,8 @@ public class TbEndereco implements Serializable {
     private boolean ativo;
     @OneToMany(mappedBy = "endereco")
     private List<TbEmpresa> tbEmpresaList;
+    
+    private List<String> chave_empresas;
 
     public TbEndereco() {
     }
@@ -164,6 +166,16 @@ public class TbEndereco implements Serializable {
     public void setTbEmpresaList(List<TbEmpresa> tbEmpresaList) {
         this.tbEmpresaList = tbEmpresaList;
     }
+
+    public List<String> getChave_empresas() {
+        return chave_empresas;
+    }
+
+    public void setChave_empresas(List<String> chave_empresas) {
+        this.chave_empresas = chave_empresas;
+    }
+    
+    
 
     @Override
     public int hashCode() {
