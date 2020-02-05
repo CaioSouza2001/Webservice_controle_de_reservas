@@ -17,6 +17,7 @@ import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -34,19 +35,45 @@ import org.json.JSONObject;
 public class ReservaService {
     
     @GET
-    @Path("findReservaById")
+    @Path("findReservaBySala")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public TbReserva getReservaById(
+    public List<TbReserva> getReservaByIdSala(
             @HeaderParam("id") Integer id,
             @HeaderParam("authorization") String authorization) {
         if (authorization != null && authorization.equals("secret")) {
             
-            TbReserva reserva = EManager.getInstance().getDbAccessor().getReservaById(id);
             
-            reserva.setIdOrganizador(null);
-            reserva.setIdSala(null);
+           TbSala sala = EManager.getInstance().getDbAccessor().getSalaById(id);
+           List<TbReserva> reservas = new ArrayList<>();
+                      
+           for(int indice = 0; indice < sala.getListaIdReservas().size(); indice++)
+           {
+               reservas.add(EManager.getInstance().getDbAccessor().getReservaById(sala.getListaIdReservas().get(indice)));
+           }
+            return reservas;    
+        } else {
+            return null;
+        }
+    }
+    
+      
+    @GET
+    @Path("findReservaByEmail")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public List<TbReserva> getReservaByEmail(
+            @HeaderParam("email") String email,
+            @HeaderParam("authorization") String authorization) {
+        if (authorization != null && authorization.equals("secret")) {
+           
+            List<TbReserva> reservas = new ArrayList<>();
             
-            return reserva;    
+            TbUsuario usuario = EManager.getInstance().getDbAccessor().getUserByEmail(email);
+           
+            for(int indice = 0; indice < usuario.getListaChaveReservas().size(); indice++)
+            {
+                reservas.add(EManager.getInstance().getDbAccessor().getReservaById(usuario.getListaChaveReservas().get(indice)));
+            }
+            return reservas;    
         } else {
             return null;
         }
@@ -61,60 +88,71 @@ public class ReservaService {
             try {
                 String userDecoded = new String(Base64.getDecoder().decode(novoUsuarioEncoded.getBytes()), Charset.forName("UTF-8"));
 
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+                
                 JSONObject reservaObj = new JSONObject(userDecoded);
 
                 TbReserva reserva = new TbReserva();
                 
                 String titulo, descricao, email;
-
+                int idSala;
+                Date inicio, termino, criacao, ultimaModificacao;
+         
+                
                 if (reservaObj.has("titulo") && reservaObj.has("descricao")) {
                     titulo = reservaObj.getString("titulo");
                     descricao = reservaObj.getString("descricao");
-                    email = reservaObj.getString("email");
-                    
-                    
+                    email = reservaObj.getString("email_organizador");
+                    inicio = new Date((reservaObj.getLong("inicio")));
+                    termino = new Date((reservaObj.getLong("termino")));
+                    idSala = reservaObj.getInt("id_sala");
+                    email= reservaObj.getString("email_organizador");
 
+
+              
                     if (titulo.isEmpty() || descricao.isEmpty()) {
                         return "Erro ao criar reserva, os dados enviados estão incompletos";
                     } 
                 } else {
                     return "Erro ao criar reserva, os dados enviados estão incompletos";
                
-                }
-/*
-                TbSala sala = EManager.getInstance().getDbAccessor().getSalaById(idSala);
-                
+                }                
                 reserva.setTitulo(titulo);
                 reserva.setDescricao(descricao);
-                reserva.setAtivo(true);
-                reserva.setChave_organizador(authorization);
+                reserva.setHorarioInicio(inicio);
+                reserva.setPrevisaoTermino(termino);
+                reserva.setAtivo(true);             
+                reserva.setChave_sala(idSala);
+                reserva.setChave_organizador(email);
                 
-                TbEmpresa empresa = EManager.getInstance().getDbAccessor().getOrganizacaoById(cnpj);
+                TbUsuario usuario = EManager.getInstance().getDbAccessor().getUserByEmail(email);
+                TbSala sala = EManager.getInstance().getDbAccessor().getSalaById(idSala);
+                
+               reserva.setIdOrganizador(usuario);
+               reserva.setIdSala(sala);
+                
 
-                if (empresa.getTbUsuarioList() == null) {
-                    List<TbUsuario> funcionarios = new ArrayList();
-                    empresa.setTbUsuarioList(funcionarios);
-                }
-                empresa.getTbUsuarioList().add(novoUsuario);
-
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                 //sdf.setTimeZone(TimeZone.getTimeZone("UTC3"));
-                Date date = new Date();
+                criacao = new Date();
                 Calendar calendar = Calendar.getInstance();
+                calendar.setTime(criacao);
                 calendar.add(Calendar.HOUR_OF_DAY, -3);
-                date = calendar.getTime();
+                criacao = calendar.getTime();
+                reserva.setCriacao(criacao);
+                
+                ultimaModificacao = new Date();
+                Calendar calendar2 = Calendar.getInstance();
+                calendar.setTime(ultimaModificacao);
+                calendar.add(Calendar.HOUR_OF_DAY, -3);
+                ultimaModificacao = calendar.getTime();
+                reserva.setUltimaModificacao(ultimaModificacao);
+                
+                EManager.getInstance().getDbAccessor().novaReserva(reserva);
 
-                novoUsuario.setCriacao(date);
-                novoUsuario.setUltimaModificacao(date);
-                novoUsuario.setCnpjEmpresa(empresa);
-                novoUsuario.setAtivo(true);
-
-                EManager.getInstance().getDbAccessor().novoUsuario(novoUsuario);
-*/
-                return "Usuário criado com sucesso";
+                return "Reserva criada com sucesso";
             } catch (Exception e) {
                 e.printStackTrace();
-                return "Erro ao criar usuário: " + e.getMessage();
+                return "Erro ao criar reserva: " + e.getMessage();
             }
 
         } else {

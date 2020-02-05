@@ -23,34 +23,31 @@ public class SalaService {
             @HeaderParam("authorization") String authorization) {
         if (authorization != null && authorization.equals("secret")) {
             TbEmpresa empresa = EManager.getInstance().getDbAccessor().getOrganizacaoById(cnpj);
-
-            for (int indice = 0; indice < empresa.getTbSalaList().size(); indice++) {
-                empresa.getTbSalaList().get(indice).setIdEmpresa(null);
-                empresa.getTbSalaList().get(indice).setTbReservaList(null);
-
+            List<TbSala> salas = new ArrayList<>();
+            
+            System.out.println(empresa.getChave_salas().size());
+            for (int indice = 0; indice < empresa.getChave_salas().size(); indice++) {
+                salas.add(EManager.getInstance().getDbAccessor().getSalaById(empresa.getChave_salas().get(indice)));
             }
-            return empresa.getTbSalaList();
+            return salas;
         } else {
             return null;
         }
     }
 
     @GET
-    @Path("encontrarSalasEmpresaFuncionario")
+    @Path("encontrarSalasById")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public List<TbSala> encontrarEmpresaFuncionario(@HeaderParam("authorization") String authorization,
+    public TbSala encontrarEmpresaFuncionario(@HeaderParam("authorization") String authorization,
             @HeaderParam("id") Integer id) {
 
-        List<TbSala> salas = new ArrayList<>();
 
-        salas.add(EManager.getInstance().getDbAccessor().getSalaById(id));
-
-        for (TbSala sala : salas) {
+        TbSala sala = EManager.getInstance().getDbAccessor().getSalaById(id);
+       
             sala.setIdEmpresa(null);
             sala.setTbReservaList(null);
-        }
-
-        return salas;
+       
+        return sala;
     }
 
 }

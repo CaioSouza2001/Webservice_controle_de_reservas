@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "TbReserva.findByHorarioInicio", query = "SELECT t FROM TbReserva t WHERE t.horarioInicio = :horarioInicio"),
     @NamedQuery(name = "TbReserva.findByPrevisaoTermino", query = "SELECT t FROM TbReserva t WHERE t.previsaoTermino = :previsaoTermino"),
     @NamedQuery(name = "TbReserva.findByCriacao", query = "SELECT t FROM TbReserva t WHERE t.criacao = :criacao"),
+    @NamedQuery(name = "TbReserva.findByUltimaModificacao", query = "SELECT t FROM TbReserva t WHERE t.ultimaModificacao = :ultimaModificacao"),
     @NamedQuery(name = "TbReserva.findByAtivo", query = "SELECT t FROM TbReserva t WHERE t.ativo = :ativo"),
     @NamedQuery(name = "TbReserva.findByDescricao", query = "SELECT t FROM TbReserva t WHERE t.descricao = :descricao"),
     @NamedQuery(name = "TbReserva.findByTitulo", query = "SELECT t FROM TbReserva t WHERE t.titulo = :titulo")})
@@ -61,6 +62,11 @@ public class TbReserva implements Serializable {
     private Date criacao;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "ultima_modificacao")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date ultimaModificacao;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "ativo")
     private boolean ativo;
     @Basic(optional = false)
@@ -80,8 +86,9 @@ public class TbReserva implements Serializable {
     @ManyToOne(optional = false)
     private TbUsuario idOrganizador;
     
-    private int chave_sala;
+     private int chave_sala;
     private String chave_organizador;
+
 
     public TbReserva() {
     }
@@ -90,9 +97,10 @@ public class TbReserva implements Serializable {
         this.id = id;
     }
 
-    public TbReserva(Integer id, Date criacao, boolean ativo, String descricao, String titulo) {
+    public TbReserva(Integer id, Date criacao, Date ultimaModificacao, boolean ativo, String descricao, String titulo) {
         this.id = id;
         this.criacao = criacao;
+        this.ultimaModificacao = ultimaModificacao;
         this.ativo = ativo;
         this.descricao = descricao;
         this.titulo = titulo;
@@ -128,6 +136,14 @@ public class TbReserva implements Serializable {
 
     public void setCriacao(Date criacao) {
         this.criacao = criacao;
+    }
+
+    public Date getUltimaModificacao() {
+        return ultimaModificacao;
+    }
+
+    public void setUltimaModificacao(Date ultimaModificacao) {
+        this.ultimaModificacao = ultimaModificacao;
     }
 
     public boolean getAtivo() {

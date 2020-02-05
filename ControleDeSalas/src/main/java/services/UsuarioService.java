@@ -51,6 +51,7 @@ public class UsuarioService {
             @HeaderParam("authorization") String authorization) {
         if (authorization != null && authorization.equals("secret")) {
             TbUsuario user = EManager.getInstance().getDbAccessor().getUserByEmail(email);
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
             //user.setTbEmpresaList(null);
             //user.setTbReservaList(null);
