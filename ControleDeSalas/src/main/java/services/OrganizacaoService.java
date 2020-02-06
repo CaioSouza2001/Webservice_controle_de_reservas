@@ -3,7 +3,12 @@ package services;
 import database.EManager;
 import entidades.TbEmpresa;
 import entidades.TbUsuario;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -41,14 +46,16 @@ public class OrganizacaoService {
             @HeaderParam("authorization") String authorization,
             @HeaderParam("cnpj") String cnpj) {
         if (authorization != null && authorization.equals("secret")) {
-            TbEmpresa empresa = EManager.getInstance().getDbAccessor().getOrganizacaoById(cnpj);
-            empresa.setTbEmpresaList(null);
-            empresa.setTbSalaList(null);
-            empresa.setTbUsuarioList(null);
-            empresa.setIdFilial(null);
-            empresa.setEndereco(null);
-
-            return empresa;
+           
+                TbEmpresa empresa = EManager.getInstance().getDbAccessor().getOrganizacaoById(cnpj);
+                empresa.setTbEmpresaList(null);
+                empresa.setTbSalaList(null);
+                empresa.setTbUsuarioList(null);
+                empresa.setIdFilial(null);
+                empresa.setEndereco(null);
+                              
+                return empresa;
+          
         }
         return null;
     }

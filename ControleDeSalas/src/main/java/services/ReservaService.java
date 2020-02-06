@@ -5,11 +5,13 @@
  */
 package services;
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import database.EManager;
 import entidades.TbEmpresa;
 import entidades.TbReserva;
 import entidades.TbSala;
 import entidades.TbUsuario;
+import java.lang.reflect.Array;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,14 +43,14 @@ public class ReservaService {
             @HeaderParam("id") Integer id,
             @HeaderParam("authorization") String authorization) {
         if (authorization != null && authorization.equals("secret")) {
-            
-            
+           
            TbSala sala = EManager.getInstance().getDbAccessor().getSalaById(id);
            List<TbReserva> reservas = new ArrayList<>();
                       
            for(int indice = 0; indice < sala.getListaIdReservas().size(); indice++)
            {
                reservas.add(EManager.getInstance().getDbAccessor().getReservaById(sala.getListaIdReservas().get(indice)));
+               System.out.println(sala.getListaIdReservas().get(indice));
            }
             return reservas;    
         } else {
@@ -102,7 +104,6 @@ public class ReservaService {
                 if (reservaObj.has("titulo") && reservaObj.has("descricao")) {
                     titulo = reservaObj.getString("titulo");
                     descricao = reservaObj.getString("descricao");
-                    email = reservaObj.getString("email_organizador");
                     inicio = new Date((reservaObj.getLong("inicio")));
                     termino = new Date((reservaObj.getLong("termino")));
                     idSala = reservaObj.getInt("id_sala");
@@ -127,6 +128,21 @@ public class ReservaService {
                 
                 TbUsuario usuario = EManager.getInstance().getDbAccessor().getUserByEmail(email);
                 TbSala sala = EManager.getInstance().getDbAccessor().getSalaById(idSala);
+                
+                if(usuario.getTbReservaList() == null)    
+                {
+                    List<TbReserva> minhasReservas = new ArrayList<>();
+                    usuario.setTbReservaList(minhasReservas);
+                }
+                usuario.getTbReservaList().add(reserva);
+                
+                if(sala.getTbReservaList() == null)
+                {
+                    List<TbReserva> reservas = new ArrayList<>();
+                    sala.setTbReservaList(reservas);
+                }
+                sala.getTbReservaList().add(reserva);
+                
                 
                reserva.setIdOrganizador(usuario);
                reserva.setIdSala(sala);

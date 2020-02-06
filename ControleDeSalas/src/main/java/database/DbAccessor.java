@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import org.eclipse.persistence.config.HintValues;
+import org.eclipse.persistence.config.QueryHints;
 
 public class DbAccessor {
 
@@ -23,7 +25,7 @@ public class DbAccessor {
 
     public List<TbUsuario> getAllUsuarios() {
         try {
-            List<TbUsuario> usuarios = this.manager.createNamedQuery("TbUsuario.findAll").getResultList();
+            List<TbUsuario> usuarios = this.manager.createNamedQuery("TbUsuario.findAll").setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
 
             for (TbUsuario usuario : usuarios) {
                 if (usuario.getTbReservaList() != null) {
@@ -44,7 +46,7 @@ public class DbAccessor {
             }
 
             this.manager.clear();
-           // this.manager.close();
+            // this.manager.close();
             return usuarios;
         } catch (NoResultException e) {
             return null;
@@ -53,7 +55,7 @@ public class DbAccessor {
 
     public TbUsuario getUserByEmail(String email) {
         try {
-            TbUsuario usuario = (TbUsuario) this.manager.createNamedQuery("TbUsuario.findByEmail").setParameter("email", email).getSingleResult();
+            TbUsuario usuario = (TbUsuario) this.manager.createNamedQuery("TbUsuario.findByEmail").setHint(QueryHints.REFRESH, HintValues.TRUE).setParameter("email", email).getSingleResult();
 
             if (usuario.getTbReservaList() != null) {
 
@@ -79,32 +81,27 @@ public class DbAccessor {
         }
     }
 
-    
-    public TbReserva getReservaById(int id)
-    {
-        try
-        {
-            TbReserva reserva = (TbReserva) this.manager.createNamedQuery("TbReserva.findById")
-                .setParameter("id", id).getSingleResult();
-        
-        reserva.setChave_organizador(reserva.getIdOrganizador().getEmail());
-        reserva.setChave_sala(reserva.getIdSala().getId());
-        
-        reserva.setIdOrganizador(null);
-        reserva.setIdSala(null);
-        
-        this.manager.clear();
-        return reserva;
-        }
-        catch(NoResultException e)
-        {
+    public TbReserva getReservaById(int id) {
+        try {
+            TbReserva reserva = (TbReserva) this.manager.createNamedQuery("TbReserva.findById").setHint(QueryHints.REFRESH, HintValues.TRUE)
+                    .setParameter("id", id).getSingleResult();
+
+            reserva.setChave_organizador(reserva.getIdOrganizador().getEmail());
+            reserva.setChave_sala(reserva.getIdSala().getId());
+
+            reserva.setIdOrganizador(null);
+            reserva.setIdSala(null);
+
+            this.manager.clear();
+            return reserva;
+        } catch (NoResultException e) {
             return null;
         }
     }
-   
+
     public List<TbEmpresa> getAllOrganizacoes() {
         try {
-            List<TbEmpresa> empresas = this.manager.createNamedQuery("TbEmpresa.findAll").getResultList();
+            List<TbEmpresa> empresas = this.manager.createNamedQuery("TbEmpresa.findAll").setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
 
             for (TbEmpresa empresa : empresas) {
                 empresa.setChave_endereco(empresa.getEndereco().getCep());
@@ -150,7 +147,7 @@ public class DbAccessor {
             }
 
             this.manager.clear();
-          //  this.manager.close();
+            //  this.manager.close();
             return empresas;
 
         } catch (NoResultException e) {
@@ -160,7 +157,7 @@ public class DbAccessor {
 
     public TbEmpresa getOrganizacaoById(String id) {
         try {
-            TbEmpresa empresa = (TbEmpresa) this.manager.createNamedQuery("TbEmpresa.findByCnpj")
+            TbEmpresa empresa = (TbEmpresa) this.manager.createNamedQuery("TbEmpresa.findByCnpj").setHint(QueryHints.REFRESH, HintValues.TRUE)
                     .setParameter("cnpj", id).getSingleResult();
 
             empresa.setChave_endereco(empresa.getEndereco().getCep());
@@ -205,7 +202,7 @@ public class DbAccessor {
             empresa.setTbUsuarioList(null);
 
             this.manager.clear();
-          //  this.manager.close();
+            //  this.manager.close();
             return empresa;
 
         } catch (NoResultException e) {
@@ -215,7 +212,7 @@ public class DbAccessor {
 
     public TbEmpresa getOrganizacaoByDominio(String dominio) {
         try {
-            TbEmpresa empresa = (TbEmpresa) this.manager.createNamedQuery("TbEmpresa.findByDominio").setParameter("dominio", dominio).getSingleResult();
+            TbEmpresa empresa = (TbEmpresa) this.manager.createNamedQuery("TbEmpresa.findByDominio").setHint(QueryHints.REFRESH, HintValues.TRUE).setParameter("dominio", dominio).getSingleResult();
 
             empresa.setChave_endereco(empresa.getEndereco().getCep());
 
@@ -259,7 +256,7 @@ public class DbAccessor {
             empresa.setTbUsuarioList(null);
 
             this.manager.clear();
-          //  this.manager.close();
+            //  this.manager.close();
             return empresa;
 
         } catch (NoResultException e) {
@@ -269,7 +266,7 @@ public class DbAccessor {
 
     public List<TbEmpresa> getOrganizacoesByDominio(String dominio) {
         try {
-            List<TbEmpresa> empresas = this.manager.createNamedQuery("TbEmpresa.findByDominio").setParameter("dominio", dominio).getResultList();
+            List<TbEmpresa> empresas = this.manager.createNamedQuery("TbEmpresa.findByDominio").setHint(QueryHints.REFRESH, HintValues.TRUE).setParameter("dominio", dominio).getResultList();
 
             for (TbEmpresa empresa : empresas) {
                 empresa.setChave_endereco(empresa.getEndereco().getCep());
@@ -315,8 +312,6 @@ public class DbAccessor {
             }
 
             this.manager.clear();
-         //   this.manager.close();
-
             return empresas;
         } catch (NoResultException e) {
             return null;
@@ -325,7 +320,7 @@ public class DbAccessor {
 
     public List<TbSala> getAllSalas() {
         try {
-            List<TbSala> salas = this.manager.createNamedQuery("TbSala.findAll").getResultList();
+            List<TbSala> salas = this.manager.createNamedQuery("TbSala.findAll").setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
 
             for (TbSala sala : salas) {
                 sala.setChave_empresa(sala.getIdEmpresa().getCnpj());
@@ -356,7 +351,6 @@ public class DbAccessor {
             }
 
             this.manager.clear();
-         //   this.manager.close();
             return salas;
         } catch (NoResultException e) {
             return null;
@@ -365,7 +359,8 @@ public class DbAccessor {
 
     public TbSala getSalaById(Integer id) {
         try {
-            TbSala sala = (TbSala) this.manager.createNamedQuery("TbSala.findById").setParameter("id", id).getSingleResult();
+            TbSala sala = (TbSala) this.manager.createNamedQuery("TbSala.findById").setHint(QueryHints.REFRESH, HintValues.TRUE)
+                    .setParameter("id", id).getSingleResult();
 
             sala.setChave_empresa(sala.getIdEmpresa().getCnpj());
             if (sala.getListaIdReservas() != null) {
@@ -394,7 +389,6 @@ public class DbAccessor {
             sala.setTbReservaList(null);
 
             this.manager.clear();
-        //    this.manager.close();
             return sala;
         } catch (NoResultException e) {
             return null;
@@ -403,7 +397,7 @@ public class DbAccessor {
 
     public TbEndereco getEnderecoByCEP(String cep) {
         try {
-            TbEndereco endereco = (TbEndereco) this.manager.createNamedQuery("TbEndereco.findByCep").setParameter("cep", cep).getSingleResult();
+            TbEndereco endereco = (TbEndereco) this.manager.createNamedQuery("TbEndereco.findByCep").setHint(QueryHints.REFRESH, HintValues.TRUE).setParameter("cep", cep).getSingleResult();
 
             if (endereco.getTbEmpresaList() != null) {
                 if (endereco.getChave_empresas() == null) {
@@ -418,7 +412,6 @@ public class DbAccessor {
             endereco.setTbEmpresaList(null);
 
             this.manager.clear();
-         //   this.manager.close();
             return endereco;
         } catch (NoResultException e) {
             return null;
@@ -427,7 +420,7 @@ public class DbAccessor {
 
     public List<TbReserva> getAllAlocacaoSalas() {
         try {
-            List<TbReserva> reservas = this.manager.createNamedQuery("TbReserva.findAll").getResultList();
+            List<TbReserva> reservas = this.manager.createNamedQuery("TbReserva.findAll").setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
 
             for (TbReserva reserva : reservas) {
                 reserva.setChave_organizador(reserva.getIdOrganizador().getEmail());
@@ -438,14 +431,14 @@ public class DbAccessor {
             }
 
             this.manager.clear();
-          //  this.manager.close();
+            //  this.manager.close();
             return reservas;
         } catch (NoResultException e) {
             return null;
         }
     }
 
-    public void atualizarEmpresaNovoFuncionario(TbEmpresa empresa) {
+    public void atualizarEmpresa(TbEmpresa empresa) {
         synchronized (this.operationLock) {
             this.manager.getTransaction().begin();
             this.manager.merge(empresa);
@@ -453,7 +446,21 @@ public class DbAccessor {
         }
     }
     
+    public void atualizarSala(TbSala sala) {
+        synchronized (this.operationLock) {
+            this.manager.getTransaction().begin();
+            this.manager.merge(sala);
+            this.manager.getTransaction().commit();
+        }
+    }
     
+    public void atualizarUsuario(TbUsuario usuario) {
+        synchronized (this.operationLock) {
+            this.manager.getTransaction().begin();
+            this.manager.merge(usuario);
+            this.manager.getTransaction().commit();
+        }
+    }
 
     public void novoUsuario(TbUsuario usuario) {
         synchronized (this.operationLock) {
@@ -462,7 +469,7 @@ public class DbAccessor {
             this.manager.getTransaction().commit();
         }
     }
-    
+
     public void novaReserva(TbReserva reserva) {
         synchronized (this.operationLock) {
             this.manager.getTransaction().begin();
@@ -470,8 +477,7 @@ public class DbAccessor {
             this.manager.getTransaction().commit();
         }
     }
-    
-  
+
 //
 //    public void modificaUsuario(Usuario usuario) {
 //        synchronized (this.operationLock) {
@@ -488,5 +494,4 @@ public class DbAccessor {
 //            this.manager.getTransaction().commit();
 //        }
 //    }
-
 }

@@ -78,6 +78,7 @@ create table tb_reserva
     horario_inicio datetime,
     previsao_termino datetime,
     criacao datetime not null default current_timestamp,
+	ultima_modificacao datetime not null default current_timestamp,
     ativo tinyint(1) default '1' not null,
     descricao varchar (200) not null,
     titulo varchar (200) not null,
@@ -148,3 +149,4 @@ select * from tb_usuario;
 select @@global.time_zone, @@session.time_zone;
 
 select * from tb_sala;
+select * from tb_reserva;
