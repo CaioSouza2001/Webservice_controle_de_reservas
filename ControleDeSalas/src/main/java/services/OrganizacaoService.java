@@ -55,7 +55,6 @@ public class OrganizacaoService {
                 empresa.setEndereco(null);
                               
                 return empresa;
-          
         }
         return null;
     }
