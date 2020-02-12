@@ -206,7 +206,7 @@ public class ReservaService {
 
     public boolean compararIntervaloDeTempo(Date inicio, Date analise, Date fim) {
 
-        Calendar calendarInicio = Calendar.getInstance();
+         Calendar calendarInicio = Calendar.getInstance();
         calendarInicio.setTime(inicio);
 
         Calendar calendarAnalise = Calendar.getInstance();
