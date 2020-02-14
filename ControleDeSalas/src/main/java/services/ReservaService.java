@@ -207,27 +207,38 @@ public class ReservaService {
     public boolean compararIntervaloDeTempo(Date inicio, Date analise, Date fim) {
 
          Calendar calendarInicio = Calendar.getInstance();
-        calendarInicio.setTime(inicio);
-
         Calendar calendarAnalise = Calendar.getInstance();
-        calendarAnalise.setTime(analise);
-
         Calendar calendarFim = Calendar.getInstance();
+
+        calendarInicio.setTime(inicio);
+        calendarAnalise.setTime(analise);
         calendarFim.setTime(fim);
 
-        int horarioInicio = calendarInicio.get(Calendar.HOUR_OF_DAY);
-        int minutosInicio = calendarInicio.get(Calendar.MINUTE);
+        int horaInicio = calendarInicio.get(Calendar.HOUR_OF_DAY);
+        int minutoInicio = calendarInicio.get(Calendar.MINUTE);
 
-        int horarioAnalise = calendarAnalise.get(Calendar.HOUR_OF_DAY);
-        int minutosAnalise = calendarAnalise.get(Calendar.MINUTE);
+        int horaAnalise = calendarAnalise.get(Calendar.HOUR_OF_DAY);
+        int minutoAnalise = calendarAnalise.get(Calendar.MINUTE);
 
-        int horarioFim = calendarFim.get(Calendar.HOUR_OF_DAY);
-        int minutosFim = calendarFim.get(Calendar.MINUTE);
+        int horaFim = calendarFim.get(Calendar.HOUR_OF_DAY);
+        int minutoFim = calendarFim.get(Calendar.MINUTE);
 
-        if (horarioAnalise >= horarioInicio && minutosAnalise >= minutosInicio && horarioAnalise <= horarioFim && minutosAnalise <= minutosFim)
-        {
+        if (horaAnalise >= horaInicio && horaAnalise <= horaFim) {
+            if (horaAnalise == horaInicio) {
+                if (minutoAnalise >= minutoInicio) {
+                    return true;
+                }
+                return false;
+
+            } else if (horaAnalise == horaFim) {
+                if (minutoAnalise <= minutoFim) {
+                    return true;
+                }
+                return false;
+            }
             return true;
         }
+
         return false;
     }
 

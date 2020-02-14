@@ -49,25 +49,38 @@ public class UsuarioService {
     public TbUsuario authentication(
             @HeaderParam("email") String email,
             @HeaderParam("authorization") String authorization) {
-        if (authorization != null && authorization.equals("secret")) {
-            TbUsuario user = EManager.getInstance().getDbAccessor().getUserByEmail(email);
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        try {
+            if (authorization != null && authorization.equals("secret")) {
+                TbUsuario user = EManager.getInstance().getDbAccessor().getUserByEmail(email);
+                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-            //user.setTbEmpresaList(null);
-            //user.setTbReservaList(null);
-            if (user != null) {
-                
-                user.setCnpjEmpresa(null);
-                user.setTbReservaList(null);
-              
-                return user;
+                //user.setTbEmpresaList(null);
+                //user.setTbReservaList(null);
+                if (user != null) {
+
+                    user.setCnpjEmpresa(null);
+                    user.setTbReservaList(null);
+                    return user;
+                } else {
+                    return null;
+                }
             } else {
                 return null;
             }
-        } else {
+        } catch (Exception e) {
+            System.out.println("ERRO: " + e.getMessage());
             return null;
         }
     }
+    
+    @GET
+    @Path("KK")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public void detectarAcesso()
+    {
+        System.out.println("Acessado");
+    }
+    
 
     @POST
     @Path("cadastro")

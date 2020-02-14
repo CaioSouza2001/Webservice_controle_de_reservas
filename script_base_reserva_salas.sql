@@ -92,10 +92,10 @@ insert into tb_endereco(cep, logradouro, bairro, cidade, estado, latitude, longi
 values('81020-520', 'Avenida Marechal Floriano Peixoto', 'Parolin', 'Curitiba', 'Pr', '-25.4521964', '-49.2618287');
 
 insert into tb_empresa(cnpj, nome, telefone, endereco, email, dominio,  tipo, horario_abertura, horario_encerramento)
-values('12345', 'Wise Systems', '123456', '81020-520', 'wisessystem@wises.com.br', 'wises.com.br', 'MATRIZ', '1950-01-01 00:00:01', '3000-12-31 23:59:59');
+values('12345', 'Wise Systems', '123456', '81020-520', 'wisessystem@wises.com.br', 'wises.com.br', 'MATRIZ', '1950-01-01 08:00:00', '3000-12-31 19:00:00');
 
 insert into tb_endereco(cep, logradouro, cidade, estado, latitude, longitude)
-values('94043', 'Amphitheatre Pkwy', 'Mountain View', 'Ca', '37.422387', '-122.08.4047');
+values('94043', 'Amphitheatre Pkwy', 'Mountain View', 'Ca', '37.422387', '-122.084047');
 
 insert into tb_empresa(cnpj, nome, telefone, endereco, email, dominio, tipo)
 values('111', 'Google Inc.', '654321', '94043', 'googleUsa@googlegroup.com', 'googlegroup.com', 'MATRIZ');
@@ -104,7 +104,7 @@ insert into tb_endereco(cep, logradouro, cidade, bairro, estado, latitude, longi
 values('04538-133', 'Avenida Brigadeiro Faria', 'Sao Paulo', 'Itaim Bibi', 'Sp', '-23.586334', '-46.681897');
 
 insert into tb_empresa(cnpj, nome, telefone, endereco, email, dominio,  tipo)
-values('222', 'Google Brasil', '40028922', '04538-133', 'googleBR@googlegroup.com.', 'googlegroup.com.br', 'FILIAL');
+values('222', 'Google Brasil', '40028922', '04538-133', 'googleBR@googlegroup.com.', 'googlegroup.com', 'FILIAL');
 
 update tb_empresa
 set id_filial = '222'
