@@ -34,6 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "TbReserva.findAll", query = "SELECT t FROM TbReserva t"),
     @NamedQuery(name = "TbReserva.findById", query = "SELECT t FROM TbReserva t WHERE t.id = :id"),
+    @NamedQuery(name = "TbReserva.findByIdWithMonth", query = "SELECT t FROM TbReserva t WHERE t.id = :id and YEAR(t.horarioInicio) = YEAR(getdate()) and MONTH(t.horarioInicio) = MONTH(getdate())"),
     @NamedQuery(name = "TbReserva.findByHorarioInicio", query = "SELECT t FROM TbReserva t WHERE t.horarioInicio = :horarioInicio"),
     @NamedQuery(name = "TbReserva.findByPrevisaoTermino", query = "SELECT t FROM TbReserva t WHERE t.previsaoTermino = :previsaoTermino"),
     @NamedQuery(name = "TbReserva.findByCriacao", query = "SELECT t FROM TbReserva t WHERE t.criacao = :criacao"),

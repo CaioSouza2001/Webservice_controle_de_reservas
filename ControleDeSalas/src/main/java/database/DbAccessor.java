@@ -98,6 +98,24 @@ public class DbAccessor {
             return null;
         }
     }
+    
+     public TbReserva getReservaByIdWithMonth(int id) {
+        try {
+            TbReserva reserva = (TbReserva) this.manager.createNamedQuery("TbReserva.findByIdWithMonth").setHint(QueryHints.REFRESH, HintValues.TRUE)
+                    .setParameter("id", id).getSingleResult();
+
+            reserva.setChave_organizador(reserva.getIdOrganizador().getEmail());
+            reserva.setChave_sala(reserva.getIdSala().getId());
+
+            reserva.setIdOrganizador(null);
+            reserva.setIdSala(null);
+
+            this.manager.clear();
+            return reserva;
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 
     public List<TbEmpresa> getAllOrganizacoes() {
         try {
@@ -209,6 +227,8 @@ public class DbAccessor {
             return null;
         }
     }
+    
+    
 
     public TbEmpresa getOrganizacaoByDominio(String dominio) {
         try {
@@ -439,26 +459,50 @@ public class DbAccessor {
     }
 
     public void atualizarEmpresa(TbEmpresa empresa) {
-        synchronized (this.operationLock) {
-            this.manager.getTransaction().begin();
-            this.manager.merge(empresa);
-            this.manager.getTransaction().commit();
+        try {
+            synchronized (this.operationLock) {
+                this.manager.getTransaction().begin();
+                this.manager.merge(empresa);
+                this.manager.getTransaction().commit();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (this.manager.getTransaction().isActive()) {
+                this.manager.getTransaction().rollback();
+                this.manager.clear();
+            }
         }
     }
 
     public void atualizarSala(TbSala sala) {
-        synchronized (this.operationLock) {
-            this.manager.getTransaction().begin();
-            this.manager.merge(sala);
-            this.manager.getTransaction().commit();
+        try {
+            synchronized (this.operationLock) {
+                this.manager.getTransaction().begin();
+                this.manager.merge(sala);
+                this.manager.getTransaction().commit();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (this.manager.getTransaction().isActive()) {
+                this.manager.getTransaction().rollback();
+                this.manager.clear();
+            }
         }
     }
 
     public void atualizarUsuario(TbUsuario usuario) {
-        synchronized (this.operationLock) {
-            this.manager.getTransaction().begin();
-            this.manager.merge(usuario);
-            this.manager.getTransaction().commit();
+        try {
+            synchronized (this.operationLock) {
+                this.manager.getTransaction().begin();
+                this.manager.merge(usuario);
+                this.manager.getTransaction().commit();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (this.manager.getTransaction().isActive()) {
+                this.manager.getTransaction().rollback();
+                this.manager.clear();
+            }
         }
     }
 

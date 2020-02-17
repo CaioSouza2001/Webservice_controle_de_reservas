@@ -54,6 +54,26 @@ public class ReservaService {
             return null;
         }
     }
+    
+    @GET
+    @Path("findReservaBySalaWithMonth")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public List<TbReserva> getReservaByIdSalaWithMonth(
+            @HeaderParam("id") Integer id,
+            @HeaderParam("authorization") String authorization) {
+        if (authorization != null && authorization.equals("secret")) {
+
+            TbSala sala = EManager.getInstance().getDbAccessor().getSalaById(id);
+            List<TbReserva> reservas = new ArrayList<>();
+
+            for (int indice = 0; indice < sala.getListaIdReservas().size(); indice++) {
+                reservas.add(EManager.getInstance().getDbAccessor().getReservaByIdWithMonth(sala.getListaIdReservas().get(indice)));
+            }
+            return reservas;
+        } else {
+            return null;
+        }
+    }
 
     @GET
     @Path("findReservaByEmail")
@@ -75,6 +95,7 @@ public class ReservaService {
             return null;
         }
     }
+    
 
     @POST
     @Path("cadastrarReserva")
@@ -206,7 +227,7 @@ public class ReservaService {
 
     public boolean compararIntervaloDeTempo(Date inicio, Date analise, Date fim) {
 
-         Calendar calendarInicio = Calendar.getInstance();
+        Calendar calendarInicio = Calendar.getInstance();
         Calendar calendarAnalise = Calendar.getInstance();
         Calendar calendarFim = Calendar.getInstance();
 
@@ -223,15 +244,21 @@ public class ReservaService {
         int horaFim = calendarFim.get(Calendar.HOUR_OF_DAY);
         int minutoFim = calendarFim.get(Calendar.MINUTE);
 
-        if (horaAnalise >= horaInicio && horaAnalise <= horaFim) {
-            if (horaAnalise == horaInicio) {
-                if (minutoAnalise >= minutoInicio) {
+        if (horaAnalise >= horaInicio && horaAnalise <= horaFim)
+        {
+            if (horaAnalise == horaInicio)
+            {
+                if (minutoAnalise >= minutoInicio)
+                {
                     return true;
                 }
                 return false;
 
-            } else if (horaAnalise == horaFim) {
-                if (minutoAnalise <= minutoFim) {
+            }
+            else if (horaAnalise == horaFim)
+            {
+                if (minutoAnalise <= minutoFim)
+                {
                     return true;
                 }
                 return false;
