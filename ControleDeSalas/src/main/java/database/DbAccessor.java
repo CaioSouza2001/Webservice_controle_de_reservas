@@ -99,23 +99,7 @@ public class DbAccessor {
         }
     }
     
-     public TbReserva getReservaByIdWithMonth(int id) {
-        try {
-            TbReserva reserva = (TbReserva) this.manager.createNamedQuery("TbReserva.findByIdWithMonth").setHint(QueryHints.REFRESH, HintValues.TRUE)
-                    .setParameter("id", id).getSingleResult();
-
-            reserva.setChave_organizador(reserva.getIdOrganizador().getEmail());
-            reserva.setChave_sala(reserva.getIdSala().getId());
-
-            reserva.setIdOrganizador(null);
-            reserva.setIdSala(null);
-
-            this.manager.clear();
-            return reserva;
-        } catch (NoResultException e) {
-            return null;
-        }
-    }
+    
 
     public List<TbEmpresa> getAllOrganizacoes() {
         try {
