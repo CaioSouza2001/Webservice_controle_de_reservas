@@ -445,7 +445,7 @@ public class DbAccessor {
             this.manager.getTransaction().commit();
         }
     }
-    
+
     public void atualizarSala(TbSala sala) {
         synchronized (this.operationLock) {
             this.manager.getTransaction().begin();
@@ -453,7 +453,7 @@ public class DbAccessor {
             this.manager.getTransaction().commit();
         }
     }
-    
+
     public void atualizarUsuario(TbUsuario usuario) {
         synchronized (this.operationLock) {
             this.manager.getTransaction().begin();
@@ -463,18 +463,34 @@ public class DbAccessor {
     }
 
     public void novoUsuario(TbUsuario usuario) {
-        synchronized (this.operationLock) {
-            this.manager.getTransaction().begin();
-            this.manager.persist(usuario);
-            this.manager.getTransaction().commit();
+        try {
+            synchronized (this.operationLock) {
+                this.manager.getTransaction().begin();
+                this.manager.persist(usuario);
+                this.manager.getTransaction().commit();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (this.manager.getTransaction().isActive()) {
+                this.manager.getTransaction().rollback();
+                this.manager.clear();
+            }
         }
     }
 
     public void novaReserva(TbReserva reserva) {
-        synchronized (this.operationLock) {
-            this.manager.getTransaction().begin();
-            this.manager.persist(reserva);
-            this.manager.getTransaction().commit();
+        try {
+            synchronized (this.operationLock) {
+                this.manager.getTransaction().begin();
+                this.manager.persist(reserva);
+                this.manager.getTransaction().commit();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (this.manager.getTransaction().isActive()) {
+                this.manager.getTransaction().rollback();
+                this.manager.clear();
+            }
         }
     }
 
