@@ -54,6 +54,9 @@ public class ReservaService {
             return null;
         }
     }
+    
+  
+
 
     @GET
     @Path("findReservaBySalaWithMonth")
@@ -107,7 +110,7 @@ public class ReservaService {
             return null;
         }
     }
-
+    
     @POST
     @Path("cadastrarReserva")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
@@ -227,6 +230,39 @@ public class ReservaService {
             } catch (Exception e) {
                 e.printStackTrace();
                 return "Erro ao criar reserva: " + e.getMessage();
+            }
+
+        } else {
+            return "Token inválido";
+        }
+    }
+
+    @POST
+    @Path("removerReserva")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public String removerReserva(@HeaderParam("authorization") String authorization,
+            @HeaderParam("id") String key) {
+        if (authorization != null && authorization.equals("secret")) {
+            try {
+                int id = Integer.parseInt(key);
+                TbReserva reserva = EManager.getInstance().getDbAccessor().getReservaById(id);
+                
+                reserva.setAtivo(false);
+                
+                try
+                {
+                   EManager.getInstance().getDbAccessor().atualizarReserva(reserva);
+                
+                    return "Removida com sucesso!"; 
+                }
+                catch(Exception e)
+                {
+                    return "Erro ao alterar base de dados.";
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "Erro ao remover reserva: " + e.getMessage();
             }
 
         } else {

@@ -154,12 +154,14 @@ select * from tb_reserva;
 SET @@global.event_scheduler = 1;
 SET SQL_SAFE_UPDATES = 0;
 delimiter |
-CREATE EVENT verificar_reservas_ativas
+/* CREATE EVENT verificar_reservas_ativas
     ON SCHEDULE
         EVERY 10 MINUTE
         STARTS CURDATE()
         ON COMPLETION PRESERVE ENABLE DO
             BEGIN
-                UPDATE tb_reserva SET ativo = 0 WHERE previsao_termino < NOW();
+                UPDATE tb_reserva SET ativo = 0 WHERE YEAR(horario_inicio) < YEAR(NOW()) AND MONTH(horario_inicio) < MONTH(NOW());
             END 
-| delimiter ;
+| delimiter ; 
+*/
+ -- DROP EVENT verificar_reservas_ativas; --

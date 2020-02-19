@@ -32,15 +32,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "tb_reserva")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TbReserva.findAll", query = "SELECT t FROM TbReserva t"),
-    @NamedQuery(name = "TbReserva.findById", query = "SELECT t FROM TbReserva t WHERE t.id = :id"),
-    @NamedQuery(name = "TbReserva.findByHorarioInicio", query = "SELECT t FROM TbReserva t WHERE t.horarioInicio = :horarioInicio"),
-    @NamedQuery(name = "TbReserva.findByPrevisaoTermino", query = "SELECT t FROM TbReserva t WHERE t.previsaoTermino = :previsaoTermino"),
-    @NamedQuery(name = "TbReserva.findByCriacao", query = "SELECT t FROM TbReserva t WHERE t.criacao = :criacao"),
-    @NamedQuery(name = "TbReserva.findByUltimaModificacao", query = "SELECT t FROM TbReserva t WHERE t.ultimaModificacao = :ultimaModificacao"),
+    @NamedQuery(name = "TbReserva.findAll", query = "SELECT t FROM TbReserva t WHERE t.ativo=1"),
+    @NamedQuery(name = "TbReserva.findById", query = "SELECT t FROM TbReserva t WHERE t.id = :id and t.ativo=1"),
+    @NamedQuery(name = "TbReserva.findByHorarioInicio", query = "SELECT t FROM TbReserva t WHERE t.horarioInicio = :horarioInicio and t.ativo=1"),
+    @NamedQuery(name = "TbReserva.findByPrevisaoTermino", query = "SELECT t FROM TbReserva t WHERE t.previsaoTermino = :previsaoTermino and t.ativo=1"),
+    @NamedQuery(name = "TbReserva.findByCriacao", query = "SELECT t FROM TbReserva t WHERE t.criacao = :criacao and t.ativo=1"),
+    @NamedQuery(name = "TbReserva.findByUltimaModificacao", query = "SELECT t FROM TbReserva t WHERE t.ultimaModificacao = :ultimaModificacao and t.ativo=1"),
     @NamedQuery(name = "TbReserva.findByAtivo", query = "SELECT t FROM TbReserva t WHERE t.ativo = :ativo"),
-    @NamedQuery(name = "TbReserva.findByDescricao", query = "SELECT t FROM TbReserva t WHERE t.descricao = :descricao"),
-    @NamedQuery(name = "TbReserva.findByTitulo", query = "SELECT t FROM TbReserva t WHERE t.titulo = :titulo")})
+    @NamedQuery(name = "TbReserva.findByDescricao", query = "SELECT t FROM TbReserva t WHERE t.descricao = :descricao and t.ativo=1"),
+    @NamedQuery(name = "TbReserva.findByTitulo", query = "SELECT t FROM TbReserva t WHERE t.titulo = :titulo and t.ativo=1")})
 public class TbReserva implements Serializable {
 
     private static final long serialVersionUID = 1L;

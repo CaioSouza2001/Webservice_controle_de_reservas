@@ -98,8 +98,6 @@ public class DbAccessor {
             return null;
         }
     }
-    
-    
 
     public List<TbEmpresa> getAllOrganizacoes() {
         try {
@@ -211,8 +209,6 @@ public class DbAccessor {
             return null;
         }
     }
-    
-    
 
     public TbEmpresa getOrganizacaoByDominio(String dominio) {
         try {
@@ -422,26 +418,6 @@ public class DbAccessor {
         }
     }
 
-    public List<TbReserva> getAllAlocacaoSalas() {
-        try {
-            List<TbReserva> reservas = this.manager.createNamedQuery("TbReserva.findAll").setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
-
-            for (TbReserva reserva : reservas) {
-                reserva.setChave_organizador(reserva.getIdOrganizador().getEmail());
-                reserva.setChave_sala(reserva.getIdSala().getId());
-
-                reserva.setIdOrganizador(null);
-                reserva.setIdSala(null);
-            }
-
-            this.manager.clear();
-            //  this.manager.close();
-            return reservas;
-        } catch (NoResultException e) {
-            return null;
-        }
-    }
-
     public void atualizarEmpresa(TbEmpresa empresa) {
         try {
             synchronized (this.operationLock) {
@@ -458,12 +434,13 @@ public class DbAccessor {
         }
     }
 
-    public void atualizarSala(TbSala sala) {
+    public void atualizarReserva(TbReserva reserva) {
         try {
             synchronized (this.operationLock) {
                 this.manager.getTransaction().begin();
-                this.manager.merge(sala);
+                this.manager.merge(reserva);
                 this.manager.getTransaction().commit();
+                this.manager.clear();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -473,6 +450,8 @@ public class DbAccessor {
             }
         }
     }
+
+  
 
     public void atualizarUsuario(TbUsuario usuario) {
         try {
