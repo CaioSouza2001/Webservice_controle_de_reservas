@@ -87,8 +87,7 @@ public class UsuarioService {
     @Path("cadastro")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public String cadastrarUsuario(@HeaderParam("authorization") String authorization,
-            @HeaderParam("novoUsuario") String novoUsuarioEncoded,
-            @HeaderParam("cnpj") String cnpj) {
+            @HeaderParam("novoUsuario") String novoUsuarioEncoded) {
         if (authorization != null && authorization.equals("secret")) {
             try {
                 String userDecoded = new String(Base64.getDecoder().decode(novoUsuarioEncoded.getBytes()), Charset.forName("UTF-8"));
@@ -98,10 +97,12 @@ public class UsuarioService {
                 TbUsuario novoUsuario = new TbUsuario();
                 String email, nome;
                 String dominio = null;
+                String cnpj;
 
                 if (userObj.has("email") && userObj.has("nome")) {
                     email = userObj.getString("email");
                     nome = userObj.getString("nome");
+                    cnpj = userObj.getString("cnpj");
 
                     if (email.isEmpty() || nome.isEmpty()) {
                         return "Erro ao criar conta, os dados enviados estão incompletos";
