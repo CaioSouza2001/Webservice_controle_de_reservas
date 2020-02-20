@@ -1,5 +1,6 @@
 package services;
 
+import database.DbAccessor;
 import database.EManager;
 import entidades.TbEmpresa;
 import entidades.TbSala;
@@ -22,12 +23,12 @@ public class SalaService {
             @HeaderParam("cnpj") String cnpj,
             @HeaderParam("authorization") String authorization) {
         if (authorization != null && authorization.equals("secret")) {
-            TbEmpresa empresa = EManager.getInstance().getDbAccessor().getOrganizacaoById(cnpj);
+            TbEmpresa empresa = DbAccessor.getOrganizacaoById(cnpj);
             List<TbSala> salas = new ArrayList<>();
             
             System.out.println(empresa.getChave_salas().size());
             for (int indice = 0; indice < empresa.getChave_salas().size(); indice++) {
-                salas.add(EManager.getInstance().getDbAccessor().getSalaById(empresa.getChave_salas().get(indice)));
+                salas.add(DbAccessor.getSalaById(empresa.getChave_salas().get(indice)));
             }
             return salas;
         } else {
@@ -42,7 +43,7 @@ public class SalaService {
             @HeaderParam("id") Integer id) {
 
 
-        TbSala sala = EManager.getInstance().getDbAccessor().getSalaById(id);
+        TbSala sala = DbAccessor.getSalaById(id);
        
             sala.setIdEmpresa(null);
             sala.setTbReservaList(null);

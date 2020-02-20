@@ -6,6 +6,7 @@
 package services;
 
 import com.sun.javafx.scene.control.skin.VirtualFlow;
+import database.DbAccessor;
 import database.EManager;
 import entidades.TbEmpresa;
 import entidades.TbReserva;
@@ -43,11 +44,11 @@ public class ReservaService {
             @HeaderParam("authorization") String authorization) {
         if (authorization != null && authorization.equals("secret")) {
 
-            TbSala sala = EManager.getInstance().getDbAccessor().getSalaById(id);
+            TbSala sala = DbAccessor.getSalaById(id);
             List<TbReserva> reservas = new ArrayList<>();
 
             for (int indice = 0; indice < sala.getListaIdReservas().size(); indice++) {
-                reservas.add(EManager.getInstance().getDbAccessor().getReservaById(sala.getListaIdReservas().get(indice)));
+                reservas.add(DbAccessor.getReservaById(sala.getListaIdReservas().get(indice)));
             }
             return reservas;
         } else {
@@ -70,11 +71,11 @@ public class ReservaService {
             Date filtro = new Date(Long.parseLong(data));
             System.out.println("Filtro: "+ filtro.toString());
 
-            TbSala sala = EManager.getInstance().getDbAccessor().getSalaById(id);
+            TbSala sala = DbAccessor.getSalaById(id);
             List<TbReserva> reservas = new ArrayList<>();
 
             for (int indice = 0; indice < sala.getListaIdReservas().size(); indice++) {
-                TbReserva reserva = EManager.getInstance().getDbAccessor().getReservaById(sala.getListaIdReservas().get(indice));
+                TbReserva reserva = DbAccessor.getReservaById(sala.getListaIdReservas().get(indice));
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(reserva.getHorarioInicio());
                 Calendar limite = Calendar.getInstance();
@@ -100,10 +101,14 @@ public class ReservaService {
 
             List<TbReserva> reservas = new ArrayList<>();
 
-            TbUsuario usuario = EManager.getInstance().getDbAccessor().getUserByEmail(email);
+            TbUsuario usuario = DbAccessor.getUserByEmail(email);
 
             for (int indice = 0; indice < usuario.getListaChaveReservas().size(); indice++) {
-                reservas.add(EManager.getInstance().getDbAccessor().getReservaById(usuario.getListaChaveReservas().get(indice)));
+                TbReserva reserva = DbAccessor.getReservaById(usuario.getListaChaveReservas().get(indice));
+                if(reserva != null)
+                {
+                     reservas.add(reserva);
+                }
             }
             return reservas;
         } else {
@@ -153,9 +158,9 @@ public class ReservaService {
                 reserva.setChave_sala(idSala);
                 reserva.setChave_organizador(email);
 
-                TbUsuario usuario = EManager.getInstance().getDbAccessor().getUserByEmail(email);
-                TbSala sala = EManager.getInstance().getDbAccessor().getSalaById(idSala);
-                TbEmpresa empresa = EManager.getInstance().getDbAccessor().getOrganizacaoById(usuario.getChave_empresa());
+                TbUsuario usuario = DbAccessor.getUserByEmail(email);
+                TbSala sala = DbAccessor.getSalaById(idSala);
+                TbEmpresa empresa = DbAccessor.getOrganizacaoById(usuario.getChave_empresa());
 
                 if (usuario.getTbReservaList() == null) {
                     List<TbReserva> minhasReservas = new ArrayList<>();
@@ -171,7 +176,7 @@ public class ReservaService {
 
                 List<TbReserva> reservas = new ArrayList<>();
                 for (int id : sala.getListaIdReservas()) {
-                    reservas.add(EManager.getInstance().getDbAccessor().getReservaById(id));
+                    reservas.add(DbAccessor.getReservaById(id));
                 }
 
                 reserva.setIdOrganizador(usuario);
@@ -215,7 +220,7 @@ public class ReservaService {
                 if (horarioPermitido) {
                     if (reserva.getHorarioInicio().before(reserva.getPrevisaoTermino())) {
                         if (verificarDisponibilidade(reserva.getHorarioInicio(), reserva.getPrevisaoTermino(), reservas)) {
-                            EManager.getInstance().getDbAccessor().novaReserva(reserva);
+                            DbAccessor.novaReserva(reserva);
                             return "Reserva criada com sucesso";
                         } else {
                             return "Já há reservas para este horário";
@@ -245,13 +250,18 @@ public class ReservaService {
         if (authorization != null && authorization.equals("secret")) {
             try {
                 int id = Integer.parseInt(key);
-                TbReserva reserva = EManager.getInstance().getDbAccessor().getReservaById(id);
+                TbReserva reserva = DbAccessor.getReservaById(id);
+                
+                reserva.setIdOrganizador(DbAccessor.getUserByEmail(reserva.getChave_organizador()));
+                reserva.setIdSala(DbAccessor.getSalaById(reserva.getChave_sala()));
                 
                 reserva.setAtivo(false);
                 
+                System.out.println(reserva.getTitulo() + " - "  + reserva.getAtivo());
+                
                 try
                 {
-                   EManager.getInstance().getDbAccessor().atualizarReserva(reserva);
+                  DbAccessor.atualizarReserva(reserva);
                 
                     return "Removida com sucesso!"; 
                 }

@@ -7,36 +7,20 @@ import javax.persistence.Persistence;
 public class EManager implements java.io.Serializable {
 
     // Para inicializar corertamente o Emanager, na hora de configurar a PU
-    // colocar ?useTimezone=true&serverTimezone=UTC na conexão
-    private static final Object emLock = new Object();
-    private static EManager instance = null;
+    // colocar ?useTimezone=true&serverTimezone=UTC na conexão   
+    // this.em = Persistence.createEntityManagerFactory("ControleSalasPU").createEntityManager();
 
+    private static EManager instance = null;
     private static EntityManager em = null;
 
-    private static final Object operationLock = new Object();
-
-    private final DbAccessor dbAccessor;
-
-    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("ControleSalasPU");
-
     public EManager() {
-        this.em = Persistence.createEntityManagerFactory("ControleSalasPU").createEntityManager();
-        this.dbAccessor = new DbAccessor(this.em, this.operationLock);
     }
 
-    public static EManager getInstance() {
-        if (instance == null) {
-            synchronized (emLock) {
-                if (instance == null) {
-                    instance = new EManager();
-                }
-            }
+    public static EntityManager getInstance() {
+        if (em == null) {
+            em = Persistence.createEntityManagerFactory("ControleSalasPU").createEntityManager();
         }
-        return instance;
-    }
 
-    public DbAccessor getDbAccessor() {
-        return dbAccessor;
+        return em;
     }
-
 }

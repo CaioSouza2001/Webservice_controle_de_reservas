@@ -15,17 +15,12 @@ import org.eclipse.persistence.config.QueryHints;
 
 public class DbAccessor {
 
-    private final EntityManager manager;
-    private final Object operationLock;
+   public DbAccessor(){}
+           
 
-    public DbAccessor(EntityManager manager, Object operationLock) {
-        this.manager = manager;
-        this.operationLock = operationLock;
-    }
-
-    public List<TbUsuario> getAllUsuarios() {
+    public static List<TbUsuario> getAllUsuarios() {
         try {
-            List<TbUsuario> usuarios = this.manager.createNamedQuery("TbUsuario.findAll").setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
+            List<TbUsuario> usuarios = EManager.getInstance().createNamedQuery("TbUsuario.findAll").setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
 
             for (TbUsuario usuario : usuarios) {
                 if (usuario.getTbReservaList() != null) {
@@ -45,7 +40,7 @@ public class DbAccessor {
                 usuario.setTbReservaList(null);
             }
 
-            this.manager.clear();
+            clear();
             // this.manager.close();
             return usuarios;
         } catch (NoResultException e) {
@@ -53,9 +48,9 @@ public class DbAccessor {
         }
     }
 
-    public TbUsuario getUserByEmail(String email) {
+    public static TbUsuario getUserByEmail(String email) {
         try {
-            TbUsuario usuario = (TbUsuario) this.manager.createNamedQuery("TbUsuario.findByEmail").setHint(QueryHints.REFRESH, HintValues.TRUE).setParameter("email", email).getSingleResult();
+            TbUsuario usuario = (TbUsuario) EManager.getInstance().createNamedQuery("TbUsuario.findByEmail").setHint(QueryHints.REFRESH, HintValues.TRUE).setParameter("email", email).getSingleResult();
 
             if (usuario.getTbReservaList() != null) {
 
@@ -73,7 +68,7 @@ public class DbAccessor {
             usuario.setTbReservaList(null);
             usuario.setCnpjEmpresa(null);
 
-            this.manager.clear();
+            clear();
             //this.manager.close();
             return usuario;
         } catch (NoResultException e) {
@@ -81,9 +76,9 @@ public class DbAccessor {
         }
     }
 
-    public TbReserva getReservaById(int id) {
+    public static TbReserva getReservaById(int id) {
         try {
-            TbReserva reserva = (TbReserva) this.manager.createNamedQuery("TbReserva.findById").setHint(QueryHints.REFRESH, HintValues.TRUE)
+            TbReserva reserva = (TbReserva) EManager.getInstance().createNamedQuery("TbReserva.findById").setHint(QueryHints.REFRESH, HintValues.TRUE)
                     .setParameter("id", id).getSingleResult();
 
             reserva.setChave_organizador(reserva.getIdOrganizador().getEmail());
@@ -92,16 +87,16 @@ public class DbAccessor {
             reserva.setIdOrganizador(null);
             reserva.setIdSala(null);
 
-            this.manager.clear();
+            clear();
             return reserva;
         } catch (NoResultException e) {
             return null;
         }
     }
 
-    public List<TbEmpresa> getAllOrganizacoes() {
+    public static List<TbEmpresa> getAllOrganizacoes() {
         try {
-            List<TbEmpresa> empresas = this.manager.createNamedQuery("TbEmpresa.findAll").setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
+            List<TbEmpresa> empresas = EManager.getInstance().createNamedQuery("TbEmpresa.findAll").setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
 
             for (TbEmpresa empresa : empresas) {
                 empresa.setChave_endereco(empresa.getEndereco().getCep());
@@ -146,7 +141,7 @@ public class DbAccessor {
                 empresa.setTbUsuarioList(null);
             }
 
-            this.manager.clear();
+            clear();
             //  this.manager.close();
             return empresas;
 
@@ -155,9 +150,9 @@ public class DbAccessor {
         }
     }
 
-    public TbEmpresa getOrganizacaoById(String id) {
+    public static TbEmpresa getOrganizacaoById(String id) {
         try {
-            TbEmpresa empresa = (TbEmpresa) this.manager.createNamedQuery("TbEmpresa.findByCnpj").setHint(QueryHints.REFRESH, HintValues.TRUE)
+            TbEmpresa empresa = (TbEmpresa) EManager.getInstance().createNamedQuery("TbEmpresa.findByCnpj").setHint(QueryHints.REFRESH, HintValues.TRUE)
                     .setParameter("cnpj", id).getSingleResult();
 
             empresa.setChave_endereco(empresa.getEndereco().getCep());
@@ -201,7 +196,7 @@ public class DbAccessor {
             empresa.setTbSalaList(null);
             empresa.setTbUsuarioList(null);
 
-            this.manager.clear();
+            clear();
             //  this.manager.close();
             return empresa;
 
@@ -210,9 +205,9 @@ public class DbAccessor {
         }
     }
 
-    public TbEmpresa getOrganizacaoByDominio(String dominio) {
+    public static TbEmpresa getOrganizacaoByDominio(String dominio) {
         try {
-            TbEmpresa empresa = (TbEmpresa) this.manager.createNamedQuery("TbEmpresa.findByDominio").setHint(QueryHints.REFRESH, HintValues.TRUE).setParameter("dominio", dominio).getSingleResult();
+            TbEmpresa empresa = (TbEmpresa) EManager.getInstance().createNamedQuery("TbEmpresa.findByDominio").setHint(QueryHints.REFRESH, HintValues.TRUE).setParameter("dominio", dominio).getSingleResult();
 
             empresa.setChave_endereco(empresa.getEndereco().getCep());
 
@@ -255,7 +250,7 @@ public class DbAccessor {
             empresa.setTbSalaList(null);
             empresa.setTbUsuarioList(null);
 
-            this.manager.clear();
+           clear();
             //  this.manager.close();
             return empresa;
 
@@ -264,9 +259,9 @@ public class DbAccessor {
         }
     }
 
-    public List<TbEmpresa> getOrganizacoesByDominio(String dominio) {
+    public static List<TbEmpresa> getOrganizacoesByDominio(String dominio) {
         try {
-            List<TbEmpresa> empresas = this.manager.createNamedQuery("TbEmpresa.findByDominio").setHint(QueryHints.REFRESH, HintValues.TRUE).setParameter("dominio", dominio).getResultList();
+            List<TbEmpresa> empresas = EManager.getInstance().createNamedQuery("TbEmpresa.findByDominio").setHint(QueryHints.REFRESH, HintValues.TRUE).setParameter("dominio", dominio).getResultList();
 
             for (TbEmpresa empresa : empresas) {
                 empresa.setChave_endereco(empresa.getEndereco().getCep());
@@ -311,16 +306,16 @@ public class DbAccessor {
                 empresa.setTbUsuarioList(null);
             }
 
-            this.manager.clear();
+            clear();
             return empresas;
         } catch (NoResultException e) {
             return null;
         }
     }
 
-    public List<TbSala> getAllSalas() {
+    public static List<TbSala> getAllSalas() {
         try {
-            List<TbSala> salas = this.manager.createNamedQuery("TbSala.findAll").setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
+            List<TbSala> salas = EManager.getInstance().createNamedQuery("TbSala.findAll").setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
 
             for (TbSala sala : salas) {
                 sala.setChave_empresa(sala.getIdEmpresa().getCnpj());
@@ -350,16 +345,16 @@ public class DbAccessor {
                 sala.setTbReservaList(null);
             }
 
-            this.manager.clear();
+            clear();
             return salas;
         } catch (NoResultException e) {
             return null;
         }
     }
 
-    public TbSala getSalaById(Integer id) {
+    public static TbSala getSalaById(Integer id) {
         try {
-            TbSala sala = (TbSala) this.manager.createNamedQuery("TbSala.findById").setHint(QueryHints.REFRESH, HintValues.TRUE)
+            TbSala sala = (TbSala) EManager.getInstance().createNamedQuery("TbSala.findById").setHint(QueryHints.REFRESH, HintValues.TRUE)
                     .setParameter("id", id).getSingleResult();
 
             sala.setChave_empresa(sala.getIdEmpresa().getCnpj());
@@ -388,16 +383,16 @@ public class DbAccessor {
             sala.setIdEmpresa(null);
             sala.setTbReservaList(null);
 
-            this.manager.clear();
+            clear();
             return sala;
         } catch (NoResultException e) {
             return null;
         }
     }
 
-    public TbEndereco getEnderecoByCEP(String cep) {
+    public static TbEndereco getEnderecoByCEP(String cep) {
         try {
-            TbEndereco endereco = (TbEndereco) this.manager.createNamedQuery("TbEndereco.findByCep").setHint(QueryHints.REFRESH, HintValues.TRUE).setParameter("cep", cep).getSingleResult();
+            TbEndereco endereco = (TbEndereco) EManager.getInstance().createNamedQuery("TbEndereco.findByCep").setHint(QueryHints.REFRESH, HintValues.TRUE).setParameter("cep", cep).getSingleResult();
 
             if (endereco.getTbEmpresaList() != null) {
                 if (endereco.getChave_empresas() == null) {
@@ -411,94 +406,91 @@ public class DbAccessor {
             }
             endereco.setTbEmpresaList(null);
 
-            this.manager.clear();
+            clear();
             return endereco;
         } catch (NoResultException e) {
             return null;
         }
     }
 
-    public void atualizarEmpresa(TbEmpresa empresa) {
-        try {
-            synchronized (this.operationLock) {
-                this.manager.getTransaction().begin();
-                this.manager.merge(empresa);
-                this.manager.getTransaction().commit();
-            }
+    public static synchronized void atualizarEmpresa(TbEmpresa empresa) {
+        try {      
+                EManager.getInstance().getTransaction().begin();
+                EManager.getInstance().merge(empresa);
+                EManager.getInstance().getTransaction().commit();
+                clear();
+            
         } catch (Exception e) {
             e.printStackTrace();
-            if (this.manager.getTransaction().isActive()) {
-                this.manager.getTransaction().rollback();
-                this.manager.clear();
+            if (EManager.getInstance().getTransaction().isActive()) {
+                EManager.getInstance().getTransaction().rollback();
+                clear();
             }
         }
     }
 
-    public void atualizarReserva(TbReserva reserva) {
+    public static synchronized void atualizarReserva(TbReserva reserva) {
         try {
-            synchronized (this.operationLock) {
-                this.manager.getTransaction().begin();
-                this.manager.merge(reserva);
-                this.manager.getTransaction().commit();
-                this.manager.clear();
-            }
+                EManager.getInstance().getTransaction().begin();
+                EManager.getInstance().merge(reserva);
+                EManager.getInstance().getTransaction().commit();
+                clear();
+           
         } catch (Exception e) {
             e.printStackTrace();
-            if (this.manager.getTransaction().isActive()) {
-                this.manager.getTransaction().rollback();
-                this.manager.clear();
+            if (EManager.getInstance().getTransaction().isActive()) {
+                EManager.getInstance().getTransaction().rollback();
+                clear();
             }
         }
     }
 
-  
-
-    public void atualizarUsuario(TbUsuario usuario) {
+    public static synchronized void atualizarUsuario(TbUsuario usuario) {
         try {
-            synchronized (this.operationLock) {
-                this.manager.getTransaction().begin();
-                this.manager.merge(usuario);
-                this.manager.getTransaction().commit();
-            }
+                EManager.getInstance().getTransaction().begin();
+                EManager.getInstance().merge(usuario);
+                EManager.getInstance().getTransaction().commit();
+            
         } catch (Exception e) {
             e.printStackTrace();
-            if (this.manager.getTransaction().isActive()) {
-                this.manager.getTransaction().rollback();
-                this.manager.clear();
+            if (EManager.getInstance().getTransaction().isActive()) {
+                EManager.getInstance().getTransaction().rollback();
+               clear();
             }
         }
     }
 
-    public void novoUsuario(TbUsuario usuario) {
+    public static synchronized void novoUsuario(TbUsuario usuario) {
         try {
-            synchronized (this.operationLock) {
-                this.manager.getTransaction().begin();
-                this.manager.persist(usuario);
-                this.manager.getTransaction().commit();
-            }
+                EManager.getInstance().getTransaction().begin();
+                EManager.getInstance().persist(usuario);
+                EManager.getInstance().getTransaction().commit();
+            
         } catch (Exception e) {
             e.printStackTrace();
-            if (this.manager.getTransaction().isActive()) {
-                this.manager.getTransaction().rollback();
-                this.manager.clear();
+            if (EManager.getInstance().getTransaction().isActive()) {
+                EManager.getInstance().getTransaction().rollback();
+                clear();
             }
         }
     }
 
-    public void novaReserva(TbReserva reserva) {
+    public static synchronized void novaReserva(TbReserva reserva) {
         try {
-            synchronized (this.operationLock) {
-                this.manager.getTransaction().begin();
-                this.manager.persist(reserva);
-                this.manager.getTransaction().commit();
-            }
+                EManager.getInstance().getTransaction().begin();
+                EManager.getInstance().persist(reserva);
+                EManager.getInstance().getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
-            if (this.manager.getTransaction().isActive()) {
-                this.manager.getTransaction().rollback();
-                this.manager.clear();
+            if (EManager.getInstance().getTransaction().isActive()) {
+                EManager.getInstance().getTransaction().rollback();
+                clear();
             }
         }
+    }
+    
+    public static void clear() {
+        EManager.getInstance().clear();
     }
 
 //

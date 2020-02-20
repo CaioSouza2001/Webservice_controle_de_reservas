@@ -1,5 +1,6 @@
 package services;
 
+import database.DbAccessor;
 import database.EManager;
 import entidades.TbEmpresa;
 import entidades.TbUsuario;
@@ -26,7 +27,7 @@ public class OrganizacaoService {
             @HeaderParam("authorization") String authorization,
             @HeaderParam("dominio") String dominio) {
         if (authorization != null && authorization.equals("secret")) {
-            List<TbEmpresa> lista = EManager.getInstance().getDbAccessor().getOrganizacoesByDominio(dominio);
+            List<TbEmpresa> lista = DbAccessor.getOrganizacoesByDominio(dominio);
             for (int i = 0; i < lista.size(); i++) {
                 lista.get(i).setTbEmpresaList(null);
                 lista.get(i).setTbSalaList(null);
@@ -47,7 +48,7 @@ public class OrganizacaoService {
             @HeaderParam("cnpj") String cnpj) {
         if (authorization != null && authorization.equals("secret")) {
            
-                TbEmpresa empresa = EManager.getInstance().getDbAccessor().getOrganizacaoById(cnpj);
+                TbEmpresa empresa = DbAccessor.getOrganizacaoById(cnpj);
                 empresa.setTbEmpresaList(null);
                 empresa.setTbSalaList(null);
                 empresa.setTbUsuarioList(null);

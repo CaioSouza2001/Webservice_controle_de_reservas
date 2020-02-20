@@ -1,5 +1,6 @@
 package services;
 
+import database.DbAccessor;
 import database.EManager;
 import entidades.TbEmpresa;
 import entidades.TbUsuario;
@@ -31,7 +32,7 @@ public class UsuarioService {
             @PathParam("email") String email,
             @HeaderParam("authorization") String authorization) {
         if (authorization != null && authorization.equals("secret")) {
-            TbUsuario user = EManager.getInstance().getDbAccessor().getUserByEmail(email);
+            TbUsuario user = DbAccessor.getUserByEmail(email);
             if (user != null) {
                 //user.getIdOrganizacao().setUsuarioCollection(null);
                 user.setTbReservaList(null);
@@ -51,7 +52,7 @@ public class UsuarioService {
             @HeaderParam("authorization") String authorization) {
         try {
             if (authorization != null && authorization.equals("secret")) {
-                TbUsuario user = EManager.getInstance().getDbAccessor().getUserByEmail(email);
+                TbUsuario user = DbAccessor.getUserByEmail(email);
                 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
                 //user.setTbEmpresaList(null);
@@ -111,14 +112,14 @@ public class UsuarioService {
                     return "Erro ao criar conta, os dados enviados estão incompletos";
                 }
 
-                if (EManager.getInstance().getDbAccessor().getUserByEmail(email) != null) {
+                if (DbAccessor.getUserByEmail(email) != null) {
                     return "O email informado já está cadastrado";
                 }
 
                 novoUsuario.setEmail(email);
                 novoUsuario.setNome(nome);
 
-                TbEmpresa empresa = EManager.getInstance().getDbAccessor().getOrganizacaoById(cnpj);
+                TbEmpresa empresa = DbAccessor.getOrganizacaoById(cnpj);
 
                 if (empresa.getTbUsuarioList() == null) {
                     List<TbUsuario> funcionarios = new ArrayList();
@@ -138,7 +139,7 @@ public class UsuarioService {
                 novoUsuario.setCnpjEmpresa(empresa);
                 novoUsuario.setAtivo(true);
 
-                EManager.getInstance().getDbAccessor().novoUsuario(novoUsuario);
+               DbAccessor.novoUsuario(novoUsuario);
 
                 return "Usuário criado com sucesso";
             } catch (Exception e) {

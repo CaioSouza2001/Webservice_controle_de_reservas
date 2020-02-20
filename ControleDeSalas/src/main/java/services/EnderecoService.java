@@ -5,6 +5,7 @@
  */
 package services;
 
+import database.DbAccessor;
 import database.EManager;
 import entidades.TbEmpresa;
 import entidades.TbEndereco;
@@ -31,7 +32,7 @@ public class EnderecoService {
             @HeaderParam("authorization") String authorization,
             @HeaderParam("cep") String cep) {
 
-          TbEndereco endereco = EManager.getInstance().getDbAccessor().getEnderecoByCEP(cep);
+          TbEndereco endereco = DbAccessor.getEnderecoByCEP(cep);
           endereco.setTbEmpresaList(null);
           return endereco;
     }
