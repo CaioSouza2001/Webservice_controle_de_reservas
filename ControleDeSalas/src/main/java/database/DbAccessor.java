@@ -16,7 +16,6 @@ import org.eclipse.persistence.config.QueryHints;
 public class DbAccessor {
 
    public DbAccessor(){}
-           
 
     public static List<TbUsuario> getAllUsuarios() {
         try {
