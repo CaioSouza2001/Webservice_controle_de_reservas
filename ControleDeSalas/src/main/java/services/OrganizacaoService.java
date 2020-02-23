@@ -59,5 +59,29 @@ public class OrganizacaoService {
         }
         return null;
     }
+    
+    @GET
+    @Path("getAllEmpresas")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public List<TbEmpresa> getAllOrganizacoes(
+            @HeaderParam("authorization") String authorization) {
+        if (authorization != null && authorization.equals("secret")) {
+                
+            try
+            {
+                
+                
+                List<TbEmpresa> empresas = DbAccessor.getAllOrganizacoes();
+                
+                return empresas;
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+                return null;
+            }                                    
+        }
+        return null;
+    }
 
 }
