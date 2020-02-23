@@ -55,21 +55,48 @@ public class ReservaService {
             return null;
         }
     }
-    
-  
 
+    @GET
+    @Path("findReservaByEmpresa")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public List<TbReserva> getReservaByIdOrganizacao(
+            @HeaderParam("cnpj") String cnpj,
+            @HeaderParam("authorization") String authorization) {
+        if (authorization != null && authorization.equals("secret")) {
+
+            TbEmpresa empresa = DbAccessor.getOrganizacaoById(cnpj);
+
+            List<TbSala> salas = new ArrayList<>();
+            int indice;
+            for (indice = 0; indice < empresa.getChave_salas().size(); indice++) {
+                salas.add(DbAccessor.getSalaById(empresa.getChave_salas().get(indice)));
+            }
+
+            List<TbReserva> reservas = new ArrayList<>();
+
+            for (TbSala sala : salas) {
+                for (indice = 0; indice < sala.getListaIdReservas().size(); indice++) {
+                    reservas.add(DbAccessor.getReservaById(sala.getListaIdReservas().get(indice)));
+                }
+            }
+
+            return reservas;
+        } else {
+            return null;
+        }
+    }
 
     @GET
     @Path("findReservaBySalaWithMonth")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public List<TbReserva> getReservaByIdSalaWithMonth(
             @HeaderParam("id") Integer id,
-            @HeaderParam("data") String data, 
+            @HeaderParam("data") String data,
             @HeaderParam("authorization") String authorization) {
         if (authorization != null && authorization.equals("secret")) {
-            
+
             Date filtro = new Date(Long.parseLong(data));
-            System.out.println("Filtro: "+ filtro.toString());
+            System.out.println("Filtro: " + filtro.toString());
 
             TbSala sala = DbAccessor.getSalaById(id);
             List<TbReserva> reservas = new ArrayList<>();
@@ -105,9 +132,8 @@ public class ReservaService {
 
             for (int indice = 0; indice < usuario.getListaChaveReservas().size(); indice++) {
                 TbReserva reserva = DbAccessor.getReservaById(usuario.getListaChaveReservas().get(indice));
-                if(reserva != null)
-                {
-                     reservas.add(reserva);
+                if (reserva != null) {
+                    reservas.add(reserva);
                 }
             }
             return reservas;
@@ -115,7 +141,7 @@ public class ReservaService {
             return null;
         }
     }
-    
+
     @POST
     @Path("cadastrarReserva")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
@@ -251,22 +277,19 @@ public class ReservaService {
             try {
                 int id = Integer.parseInt(key);
                 TbReserva reserva = DbAccessor.getReservaById(id);
-                
+
                 reserva.setIdOrganizador(DbAccessor.getUserByEmail(reserva.getChave_organizador()));
                 reserva.setIdSala(DbAccessor.getSalaById(reserva.getChave_sala()));
-                
+
                 reserva.setAtivo(false);
-                
-                System.out.println(reserva.getTitulo() + " - "  + reserva.getAtivo());
-                
-                try
-                {
-                  DbAccessor.atualizarReserva(reserva);
-                
-                    return "Removida com sucesso!"; 
-                }
-                catch(Exception e)
-                {
+
+                System.out.println(reserva.getTitulo() + " - " + reserva.getAtivo());
+
+                try {
+                    DbAccessor.atualizarReserva(reserva);
+
+                    return "Removida com sucesso!";
+                } catch (Exception e) {
                     return "Erro ao alterar base de dados.";
                 }
 
