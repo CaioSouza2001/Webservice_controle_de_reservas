@@ -255,7 +255,13 @@ public class ReservaService {
                         return "Período selecionado inválido!";
                     }
                 } else {
+                    System.out.println(reserva.getHorarioInicio());                    
+                    System.out.println(reserva.getPrevisaoTermino());
+                    System.out.println(empresa.getHorarioAbertura());
+                    System.out.println(empresa.getHorarioEncerramento());                    
                     return "A empresa nao se encontra aberta neste horario!";
+                    
+
                 }
 
             } catch (Exception e) {
