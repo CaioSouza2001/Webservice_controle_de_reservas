@@ -55,6 +55,8 @@ public class TbUsuario implements Serializable {
     @Size(min = 1, max = 200)
     @Column(name = "nome")
     private String nome;
+    @Column(name = "senha")
+    private String senha;
     @Basic(optional = false)
     @NotNull
     @Column(name = "ativo")
@@ -187,6 +189,16 @@ public class TbUsuario implements Serializable {
         }
         return true;
     }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+    
+    
 
     @Override
     public String toString() {

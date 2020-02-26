@@ -17,6 +17,7 @@ public class DbAccessor {
 
    public DbAccessor(){}
 
+   ///// USUARIO ///    
     public static List<TbUsuario> getAllUsuarios() {
         try {
             List<TbUsuario> usuarios = EManager.getInstance().createNamedQuery("TbUsuario.findAll").setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
@@ -74,25 +75,39 @@ public class DbAccessor {
             return null;
         }
     }
-
-    public static TbReserva getReservaById(int id) {
+    
+    public static synchronized void atualizarUsuario(TbUsuario usuario) {
         try {
-            TbReserva reserva = (TbReserva) EManager.getInstance().createNamedQuery("TbReserva.findById").setHint(QueryHints.REFRESH, HintValues.TRUE)
-                    .setParameter("id", id).getSingleResult();
-
-            reserva.setChave_organizador(reserva.getIdOrganizador().getEmail());
-            reserva.setChave_sala(reserva.getIdSala().getId());
-
-            reserva.setIdOrganizador(null);
-            reserva.setIdSala(null);
-
-            clear();
-            return reserva;
-        } catch (NoResultException e) {
-            return null;
+                EManager.getInstance().getTransaction().begin();
+                EManager.getInstance().merge(usuario);
+                EManager.getInstance().getTransaction().commit();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (EManager.getInstance().getTransaction().isActive()) {
+                EManager.getInstance().getTransaction().rollback();
+               clear();
+            }
         }
     }
 
+    public static synchronized void novoUsuario(TbUsuario usuario) {
+        try {
+                EManager.getInstance().getTransaction().begin();
+                EManager.getInstance().persist(usuario);
+                EManager.getInstance().getTransaction().commit();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (EManager.getInstance().getTransaction().isActive()) {
+                EManager.getInstance().getTransaction().rollback();
+                clear();
+            }
+        }
+    }
+    
+    ////// EMPRESA /////
+    
     public static List<TbEmpresa> getAllOrganizacoes() {
         try {
             List<TbEmpresa> empresas = EManager.getInstance().createNamedQuery("TbEmpresa.findAll").setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
@@ -148,8 +163,8 @@ public class DbAccessor {
             return null;
         }
     }
-
-    public static TbEmpresa getOrganizacaoById(String id) {
+    
+     public static TbEmpresa getOrganizacaoById(String id) {
         try {
             TbEmpresa empresa = (TbEmpresa) EManager.getInstance().createNamedQuery("TbEmpresa.findByCnpj").setHint(QueryHints.REFRESH, HintValues.TRUE)
                     .setParameter("cnpj", id).getSingleResult();
@@ -311,8 +326,26 @@ public class DbAccessor {
             return null;
         }
     }
-
-    public static List<TbSala> getAllSalas() {
+    
+    public static synchronized void atualizarEmpresa(TbEmpresa empresa) {
+        try {      
+                EManager.getInstance().getTransaction().begin();
+                EManager.getInstance().merge(empresa);
+                EManager.getInstance().getTransaction().commit();
+                clear();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (EManager.getInstance().getTransaction().isActive()) {
+                EManager.getInstance().getTransaction().rollback();
+                clear();
+            }
+        }
+    }
+    
+    
+    /// SALAS////
+     public static List<TbSala> getAllSalas() {
         try {
             List<TbSala> salas = EManager.getInstance().createNamedQuery("TbSala.findAll").setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
 
@@ -350,8 +383,8 @@ public class DbAccessor {
             return null;
         }
     }
-
-    public static TbSala getSalaById(Integer id) {
+     
+      public static TbSala getSalaById(Integer id) {
         try {
             TbSala sala = (TbSala) EManager.getInstance().createNamedQuery("TbSala.findById").setHint(QueryHints.REFRESH, HintValues.TRUE)
                     .setParameter("id", id).getSingleResult();
@@ -388,8 +421,10 @@ public class DbAccessor {
             return null;
         }
     }
-
-    public static TbEndereco getEnderecoByCEP(String cep) {
+      
+      //// ENDEREÇO ///
+      
+          public static TbEndereco getEnderecoByCEP(String cep) {
         try {
             TbEndereco endereco = (TbEndereco) EManager.getInstance().createNamedQuery("TbEndereco.findByCep").setHint(QueryHints.REFRESH, HintValues.TRUE).setParameter("cep", cep).getSingleResult();
 
@@ -412,19 +447,24 @@ public class DbAccessor {
         }
     }
 
-    public static synchronized void atualizarEmpresa(TbEmpresa empresa) {
-        try {      
-                EManager.getInstance().getTransaction().begin();
-                EManager.getInstance().merge(empresa);
-                EManager.getInstance().getTransaction().commit();
-                clear();
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (EManager.getInstance().getTransaction().isActive()) {
-                EManager.getInstance().getTransaction().rollback();
-                clear();
-            }
+      
+    ///// RESERVA /////
+
+    public static TbReserva getReservaById(int id) {
+        try {
+            TbReserva reserva = (TbReserva) EManager.getInstance().createNamedQuery("TbReserva.findById").setHint(QueryHints.REFRESH, HintValues.TRUE)
+                    .setParameter("id", id).getSingleResult();
+
+            reserva.setChave_organizador(reserva.getIdOrganizador().getEmail());
+            reserva.setChave_sala(reserva.getIdSala().getId());
+
+            reserva.setIdOrganizador(null);
+            reserva.setIdSala(null);
+
+            clear();
+            return reserva;
+        } catch (NoResultException e) {
+            return null;
         }
     }
 
@@ -435,36 +475,6 @@ public class DbAccessor {
                 EManager.getInstance().getTransaction().commit();
                 clear();
            
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (EManager.getInstance().getTransaction().isActive()) {
-                EManager.getInstance().getTransaction().rollback();
-                clear();
-            }
-        }
-    }
-
-    public static synchronized void atualizarUsuario(TbUsuario usuario) {
-        try {
-                EManager.getInstance().getTransaction().begin();
-                EManager.getInstance().merge(usuario);
-                EManager.getInstance().getTransaction().commit();
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (EManager.getInstance().getTransaction().isActive()) {
-                EManager.getInstance().getTransaction().rollback();
-               clear();
-            }
-        }
-    }
-
-    public static synchronized void novoUsuario(TbUsuario usuario) {
-        try {
-                EManager.getInstance().getTransaction().begin();
-                EManager.getInstance().persist(usuario);
-                EManager.getInstance().getTransaction().commit();
-            
         } catch (Exception e) {
             e.printStackTrace();
             if (EManager.getInstance().getTransaction().isActive()) {

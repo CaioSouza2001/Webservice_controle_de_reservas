@@ -61,6 +61,7 @@ create table tb_usuario
 (
 	email varchar (200),
     nome varchar (200) not null,
+    senha varchar(500) not null,
     cnpj_empresa varchar (200) not null,
 	ativo tinyint(1) default '1' not null,
     criacao datetime default current_timestamp not null ,

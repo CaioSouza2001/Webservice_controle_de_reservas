@@ -95,7 +95,7 @@ public class UsuarioService {
                 JSONObject userObj = new JSONObject(userDecoded);
 
                 TbUsuario novoUsuario = new TbUsuario();
-                String email, nome;
+                String email, nome, senha;
                 String dominio = null;
                 String cnpj;
 
@@ -103,6 +103,7 @@ public class UsuarioService {
                     email = userObj.getString("email");
                     nome = userObj.getString("nome");
                     cnpj = userObj.getString("cnpj");
+                    senha = userObj.getString("senha");
 
                     if (email.isEmpty() || nome.isEmpty()) {
                         return "Erro ao criar conta, os dados enviados estão incompletos";
@@ -119,6 +120,7 @@ public class UsuarioService {
 
                 novoUsuario.setEmail(email);
                 novoUsuario.setNome(nome);
+                novoUsuario.setSenha(senha);
 
                 TbEmpresa empresa = DbAccessor.getOrganizacaoById(cnpj);
 
