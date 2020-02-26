@@ -70,7 +70,6 @@ create table tb_usuario
 constraint pk_tb_usuario primary key (email),
 constraint pk_tb_usuario foreign key (cnpj_empresa) references tb_empresa (cnpj)
 );
-
 create table tb_reserva
 (
 	id int auto_increment,
@@ -144,7 +143,6 @@ values('Caio de Souza', 'caio@wises.com.br', '12345');
 
 select * from tb_empresa;
 select * from tb_endereco;
-
 select * from tb_usuario;
 
 select @@global.time_zone, @@session.time_zone;
