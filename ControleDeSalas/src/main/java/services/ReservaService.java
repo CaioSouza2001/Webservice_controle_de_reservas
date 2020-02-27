@@ -76,7 +76,12 @@ public class ReservaService {
 
             for (TbSala sala : salas) {
                 for (indice = 0; indice < sala.getListaIdReservas().size(); indice++) {
-                    reservas.add(DbAccessor.getReservaById(sala.getListaIdReservas().get(indice)));
+                   TbReserva reserva = DbAccessor.getReservaById(sala.getListaIdReservas().get(indice));
+                    if(reserva != null)
+                    {
+                        reservas.add(reserva);
+                    }
+                    
                 }
             }
 

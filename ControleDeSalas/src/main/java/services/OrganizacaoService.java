@@ -69,8 +69,6 @@ public class OrganizacaoService {
                 
             try
             {
-                
-                
                 List<TbEmpresa> empresas = DbAccessor.getAllOrganizacoes();
                 
                 return empresas;
