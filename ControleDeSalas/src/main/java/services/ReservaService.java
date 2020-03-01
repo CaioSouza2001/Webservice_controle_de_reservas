@@ -48,7 +48,12 @@ public class ReservaService {
             List<TbReserva> reservas = new ArrayList<>();
 
             for (int indice = 0; indice < sala.getListaIdReservas().size(); indice++) {
-                reservas.add(DbAccessor.getReservaById(sala.getListaIdReservas().get(indice)));
+                TbReserva reserva = DbAccessor.getReservaById(sala.getListaIdReservas().get(indice));
+                
+                if(reserva != null)
+                {
+                    reservas.add(reserva);
+                }
             }
             return reservas;
         } else {
@@ -107,13 +112,16 @@ public class ReservaService {
 
             for (int indice = 0; indice < sala.getListaIdReservas().size(); indice++) {
                 TbReserva reserva = DbAccessor.getReservaById(sala.getListaIdReservas().get(indice));
-                Calendar calendar = Calendar.getInstance();
+                if(reserva!= null)
+                {
+                    Calendar calendar = Calendar.getInstance();
                 calendar.setTime(reserva.getHorarioInicio());
                 Calendar limite = Calendar.getInstance();
                 limite.setTime(filtro);
 
                 if (calendar.get(Calendar.MONTH) == limite.get(Calendar.MONTH) && calendar.get(Calendar.YEAR) == limite.get(Calendar.YEAR)) {
                     reservas.add(reserva);
+                }
                 }
             }
             return reservas;
