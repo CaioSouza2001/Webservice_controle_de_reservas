@@ -76,12 +76,11 @@ public class ReservaService {
 
             for (TbSala sala : salas) {
                 for (indice = 0; indice < sala.getListaIdReservas().size(); indice++) {
-                   TbReserva reserva = DbAccessor.getReservaById(sala.getListaIdReservas().get(indice));
-                    if(reserva != null)
-                    {
+                    TbReserva reserva = DbAccessor.getReservaById(sala.getListaIdReservas().get(indice));
+                    if (reserva != null) {
                         reservas.add(reserva);
                     }
-                    
+
                 }
             }
 
@@ -135,10 +134,12 @@ public class ReservaService {
 
             TbUsuario usuario = DbAccessor.getUserByEmail(email);
 
-            for (int indice = 0; indice < usuario.getListaChaveReservas().size(); indice++) {
-                TbReserva reserva = DbAccessor.getReservaById(usuario.getListaChaveReservas().get(indice));
-                if (reserva != null) {
-                    reservas.add(reserva);
+            if (usuario != null) {
+                for (int indice = 0; indice < usuario.getListaChaveReservas().size(); indice++) {
+                    TbReserva reserva = DbAccessor.getReservaById(usuario.getListaChaveReservas().get(indice));
+                    if (reserva != null) {
+                        reservas.add(reserva);
+                    }
                 }
             }
             return reservas;
@@ -260,12 +261,11 @@ public class ReservaService {
                         return "Período selecionado inválido!";
                     }
                 } else {
-                    System.out.println(reserva.getHorarioInicio());                    
+                    System.out.println(reserva.getHorarioInicio());
                     System.out.println(reserva.getPrevisaoTermino());
                     System.out.println(empresa.getHorarioAbertura());
-                    System.out.println(empresa.getHorarioEncerramento());                    
+                    System.out.println(empresa.getHorarioEncerramento());
                     return "A empresa nao se encontra aberta neste horario!";
-                    
 
                 }
 
