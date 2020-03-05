@@ -182,6 +182,8 @@ public class ReservaService {
                     termino = new Date((reservaObj.getLong("termino")));
                     idSala = reservaObj.getInt("id_sala");
                     email = reservaObj.getString("email_organizador");
+                    
+                    System.out.println("Dados: " + titulo +"\n" + descricao+"\n" + idSala+"\n" + email);
 
                     if (titulo.isEmpty() || descricao.isEmpty()) {
                         return "Erro ao criar reserva, os dados enviados estão incompletos";
