@@ -7,7 +7,7 @@ import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2020-03-05T11:33:14")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2020-03-05T21:32:27")
 @StaticMetamodel(TbEndereco.class)
 public class TbEndereco_ { 
 

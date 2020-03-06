@@ -49,9 +49,8 @@ public class ReservaService {
 
             for (int indice = 0; indice < sala.getListaIdReservas().size(); indice++) {
                 TbReserva reserva = DbAccessor.getReservaById(sala.getListaIdReservas().get(indice));
-                
-                if(reserva != null)
-                {
+
+                if (reserva != null) {
                     reservas.add(reserva);
                 }
             }
@@ -112,16 +111,15 @@ public class ReservaService {
 
             for (int indice = 0; indice < sala.getListaIdReservas().size(); indice++) {
                 TbReserva reserva = DbAccessor.getReservaById(sala.getListaIdReservas().get(indice));
-                if(reserva!= null)
-                {
+                if (reserva != null) {
                     Calendar calendar = Calendar.getInstance();
-                calendar.setTime(reserva.getHorarioInicio());
-                Calendar limite = Calendar.getInstance();
-                limite.setTime(filtro);
+                    calendar.setTime(reserva.getHorarioInicio());
+                    Calendar limite = Calendar.getInstance();
+                    limite.setTime(filtro);
 
-                if (calendar.get(Calendar.MONTH) == limite.get(Calendar.MONTH) && calendar.get(Calendar.YEAR) == limite.get(Calendar.YEAR)) {
-                    reservas.add(reserva);
-                }
+                    if (calendar.get(Calendar.MONTH) == limite.get(Calendar.MONTH) && calendar.get(Calendar.YEAR) == limite.get(Calendar.YEAR)) {
+                        reservas.add(reserva);
+                    }
                 }
             }
             return reservas;
@@ -182,8 +180,8 @@ public class ReservaService {
                     termino = new Date((reservaObj.getLong("termino")));
                     idSala = reservaObj.getInt("id_sala");
                     email = reservaObj.getString("email_organizador");
-                    
-                    System.out.println("Dados: " + titulo +"\n" + descricao+"\n" + idSala+"\n" + email);
+
+                    System.out.println("Dados: " + titulo + "\n" + descricao + "\n" + idSala + "\n" + email);
 
                     if (titulo.isEmpty() || descricao.isEmpty()) {
                         return "Erro ao criar reserva, os dados enviados estão incompletos";
@@ -216,10 +214,7 @@ public class ReservaService {
                 }
                 sala.getTbReservaList().add(reserva);
 
-                List<TbReserva> reservas = new ArrayList<>();
-                for (int id : sala.getListaIdReservas()) {
-                    reservas.add(DbAccessor.getReservaById(id));
-                }
+                List<TbReserva> reservas = getReservaByIdSala(idSala, authorization);
 
                 reserva.setIdOrganizador(usuario);
                 reserva.setIdSala(sala);
@@ -261,6 +256,7 @@ public class ReservaService {
                 }
                 if (horarioPermitido) {
                     if (reserva.getHorarioInicio().before(reserva.getPrevisaoTermino())) {
+                        System.out.println("Reservas: " + reservas.size());
                         if (verificarDisponibilidade(reserva.getHorarioInicio(), reserva.getPrevisaoTermino(), reservas)) {
                             DbAccessor.novaReserva(reserva);
                             return "Reserva criada com sucesso";
@@ -363,12 +359,28 @@ public class ReservaService {
     }
 
     private boolean verificarDisponibilidade(Date inicio, Date fim, List<TbReserva> reservas) {
-        for (TbReserva reserva : reservas) {
-            if (!(inicio.before(reserva.getHorarioInicio()) && fim.before(reserva.getHorarioInicio())) && !(inicio.after(reserva.getPrevisaoTermino()) && fim.after(reserva.getPrevisaoTermino()))) {
-                return false;
+        try {
+            System.out.println(inicio);
+            System.out.println(fim);
+            System.out.println("---");
+
+            for (TbReserva reserva : reservas) {
+                System.out.println(reserva.getHorarioInicio());
+                System.out.println(reserva.getPrevisaoTermino());
+
+                if (!(inicio.before(reserva.getHorarioInicio()) && fim.before(reserva.getHorarioInicio()))
+                        && !(inicio.after(reserva.getPrevisaoTermino())
+                        && fim.after(reserva.getPrevisaoTermino()))) {
+                    return false;
+                }
             }
+            return true;
+        } catch (Exception e) {
+            System.out.println("Caiu na exception");
+
+            e.printStackTrace();
+            return false;
         }
-        return true;
     }
 
 }
