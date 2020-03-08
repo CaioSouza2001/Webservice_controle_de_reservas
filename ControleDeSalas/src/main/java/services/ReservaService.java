@@ -37,7 +37,7 @@ import org.json.JSONObject;
 public class ReservaService {
 
     @GET
-    @Path("findReservaBySala")
+    @Path("findReservasBySala")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public List<TbReserva> getReservaByIdSala(
             @HeaderParam("id") Integer id,
@@ -61,7 +61,7 @@ public class ReservaService {
     }
 
     @GET
-    @Path("findReservaByEmpresa")
+    @Path("findReservasByEmpresa")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public List<TbReserva> getReservaByIdOrganizacao(
             @HeaderParam("cnpj") String cnpj,
@@ -95,7 +95,7 @@ public class ReservaService {
     }
 
     @GET
-    @Path("findReservaBySalaWithMonth")
+    @Path("findReservasBySalaWithMonth")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public List<TbReserva> getReservaByIdSalaWithMonth(
             @HeaderParam("id") Integer id,
@@ -129,9 +129,9 @@ public class ReservaService {
     }
 
     @GET
-    @Path("findReservaByEmail")
+    @Path("findReservasByEmail")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public List<TbReserva> getReservaByEmail(
+    public List<TbReserva> getReservasByEmail(
             @HeaderParam("email") String email,
             @HeaderParam("authorization") String authorization) {
         if (authorization != null && authorization.equals("secret")) {
@@ -149,6 +149,24 @@ public class ReservaService {
                 }
             }
             return reservas;
+        } else {
+            return null;
+        }
+    }
+    
+    @GET
+    @Path("findReservaById")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public TbReserva getReservaById(
+            @HeaderParam("id") String id,
+            @HeaderParam("authorization") String authorization) {
+        if (authorization != null && authorization.equals("secret")) {
+
+            List<TbReserva> reservas = new ArrayList<>();
+
+           TbReserva reserva = DbAccessor.getReservaById(Integer.parseInt(id));
+          
+            return reserva;
         } else {
             return null;
         }

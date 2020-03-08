@@ -3,6 +3,7 @@ package services;
 import database.DbAccessor;
 import database.EManager;
 import entidades.TbEmpresa;
+import entidades.TbReserva;
 import entidades.TbSala;
 import entidades.TbUsuario;
 import java.util.ArrayList;
@@ -35,11 +36,11 @@ public class SalaService {
             return null;
         }
     }
-
+    
     @GET
     @Path("encontrarSalasById")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public TbSala encontrarEmpresaFuncionario(@HeaderParam("authorization") String authorization,
+    public TbSala encontrarSalaPorId (@HeaderParam("authorization") String authorization,
             @HeaderParam("id") Integer id) {
 
 
@@ -49,6 +50,36 @@ public class SalaService {
             sala.setTbReservaList(null);
        
         return sala;
+    }    
+
+    @GET
+    @Path("encontrarSalasDeReservasFromEmail")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public List<TbSala> encontrarSalasDeReservasDeUsuario
+        (@HeaderParam("authorization") String authorization,
+            @HeaderParam("email") String email) {
+            
+           ReservaService reservaService = new ReservaService();
+           
+           List<TbReserva> reservas = reservaService.getReservasByEmail(email, authorization);
+           
+           List<TbSala> salas = new ArrayList<>();
+           
+           for(int indice = 0; indice < reservas.size(); indice++)
+           {
+               TbReserva reserva = reservas.get(indice);
+               
+               if(reserva != null)
+               {
+                   TbSala sala = encontrarSalaPorId(authorization, reserva.getChave_sala());
+                   
+                   if(sala != null)
+                   {
+                       salas.add(sala);
+                   }            
+               }
+           }
+        return salas;
     }
 
 }

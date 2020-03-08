@@ -63,10 +63,8 @@ public class UsuarioService {
 
                     user.setCnpjEmpresa(null);
                     user.setTbReservaList(null);
+                } 
                     return user;
-                } else {
-                    return null;
-                }
             } else {
                 return null;
             }
