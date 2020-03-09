@@ -24,6 +24,7 @@ import java.util.Locale;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -153,7 +154,7 @@ public class ReservaService {
             return null;
         }
     }
-    
+
     @GET
     @Path("findReservaById")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
@@ -164,8 +165,8 @@ public class ReservaService {
 
             List<TbReserva> reservas = new ArrayList<>();
 
-           TbReserva reserva = DbAccessor.getReservaById(Integer.parseInt(id));
-          
+            TbReserva reserva = DbAccessor.getReservaById(Integer.parseInt(id));
+
             return reserva;
         } else {
             return null;
@@ -293,6 +294,95 @@ public class ReservaService {
 
                 }
 
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "Erro ao criar reserva: " + e.getMessage();
+            }
+
+        } else {
+            return "Token inválido";
+        }
+    }
+
+    @PUT
+    @Path("atualizarReserva")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public String atualizarReserva(@HeaderParam("authorization") String authorization,
+            @HeaderParam("editar") String editarUsuarioEncoded) {
+        if (authorization != null && authorization.equals("secret")) {
+            try {
+                String userDecoded = new String(Base64.getDecoder().decode(editarUsuarioEncoded.getBytes()), Charset.forName("UTF-8"));
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+
+                JSONObject reservaObj = new JSONObject(userDecoded);
+
+                TbReserva reserva = new TbReserva();
+
+                String titulo, descricao, email;
+                int id, idSala;
+                Date inicio, termino, criacao, ultimaModificacao;
+
+                if (reservaObj.has("titulo") && reservaObj.has("descricao")) {
+                    id = reservaObj.getInt("id");
+                    titulo = reservaObj.getString("titulo");
+                    descricao = reservaObj.getString("descricao");
+                    inicio = new Date((reservaObj.getLong("inicio")));
+                    termino = new Date((reservaObj.getLong("termino")));
+                    idSala = reservaObj.getInt("id_sala");
+                    email = reservaObj.getString("email_organizador");
+                    criacao = new Date(reservaObj.getLong("criacao"));
+
+                    System.out.println("Dados: " + titulo + "\n" + descricao + "\n" + idSala + "\n" + email);
+
+                    if (titulo.isEmpty() || descricao.isEmpty()) {
+                        return "Erro ao criar reserva, os dados enviados estão incompletos";
+                    }
+                } else {
+                    return "Erro ao criar reserva, os dados enviados estão incompletos";
+
+                }
+                
+                reserva.setId(id);
+                reserva.setTitulo(titulo);
+                reserva.setDescricao(descricao);
+                reserva.setHorarioInicio(inicio);
+                reserva.setPrevisaoTermino(termino);
+                reserva.setCriacao(criacao);
+
+                reserva.setAtivo(true);
+                reserva.setChave_sala(idSala);
+                reserva.setChave_organizador(email);
+
+                TbUsuario usuario = DbAccessor.getUserByEmail(email);
+                TbSala sala = DbAccessor.getSalaById(idSala);
+                TbEmpresa empresa = DbAccessor.getOrganizacaoById(usuario.getChave_empresa());
+
+                if (usuario.getTbReservaList() == null) {
+                    List<TbReserva> minhasReservas = new ArrayList<>();
+                    usuario.setTbReservaList(minhasReservas);
+                }
+                usuario.getTbReservaList().add(reserva);
+
+                if (sala.getTbReservaList() == null) {
+                    List<TbReserva> reservas = new ArrayList<>();
+                    sala.setTbReservaList(reservas);
+                }
+                sala.getTbReservaList().add(reserva);
+
+                List<TbReserva> reservas = getReservaByIdSala(idSala, authorization);
+
+                reserva.setIdOrganizador(usuario);
+                reserva.setIdSala(sala);
+
+                Calendar calendar = Calendar.getInstance();
+                ultimaModificacao = calendar.getTime();
+                reserva.setUltimaModificacao(ultimaModificacao);
+                
+                 DbAccessor.atualizarReserva(reserva);
+                 return "Reserva alterada com sucesso";
+
+                //sdf.setTimeZone(TimeZone.getTimeZone("UTC3"));
             } catch (Exception e) {
                 e.printStackTrace();
                 return "Erro ao criar reserva: " + e.getMessage();
