@@ -1,5 +1,4 @@
 create database if not exists reserva_sala;
-
 use reserva_sala;
 
 create table tb_endereco
@@ -8,7 +7,7 @@ create table tb_endereco
     logradouro varchar (150) not null,
     bairro varchar (150),
     cidade varchar(150) not null,
-    estado varchar (100) not null,
+    estado varchar (250) not null,
     latitude varchar (200),
     longitude varchar (200),
     ativo tinyint(1) default '1' not null,
@@ -39,7 +38,7 @@ constraint fk_tb_empresa_tb_endereco foreign key (endereco) references tb_endere
 
 create table tb_sala
 (
-	id int auto_increment,
+	id_sala int auto_increment,
     nome varchar (100) not null,
     capacidade_maxima int not null,
     quantidade_assentos int not null,
@@ -53,7 +52,7 @@ create table tb_sala
     ativo tinyint(1) default '1' not null,
     id_empresa varchar (200) not null,
     
-constraint pk_tb_sala primary key (id),
+constraint pk_tb_sala primary key (id_sala),
 constraint pk_tb_sala_tb_empregado foreign key (id_empresa) references tb_empresa(cnpj)
 );
 
@@ -72,7 +71,7 @@ constraint pk_tb_usuario foreign key (cnpj_empresa) references tb_empresa (cnpj)
 );
 create table tb_reserva
 (
-	id int auto_increment,
+	id_reserva int auto_increment,
     id_sala int not null,
     id_organizador varchar (200) not null,
     horario_inicio datetime,
@@ -83,25 +82,25 @@ create table tb_reserva
     descricao varchar (200) not null,
     titulo varchar (200) not null,
 
-constraint pk_tb_reserva primary key (id),
-constraint fk_tb_reserva_tb_sala foreign key (id_sala) references tb_sala(id),
+constraint pk_tb_reserva primary key (id_reserva),
+constraint fk_tb_reserva_tb_sala foreign key (id_sala) references tb_sala(id_sala),
 constraint fk_tb_reserva_tb_tb_usuario foreign key (id_organizador) references tb_usuario(email)
 );
 
 insert into tb_endereco(cep, logradouro, bairro, cidade, estado, latitude, longitude)
-values('81020-520', 'Avenida Marechal Floriano Peixoto', 'Parolin', 'Curitiba', 'Pr', '-25.4521964', '-49.2618287');
+values('81020-520', 'Avenida Marechal Floriano Peixoto', 'Parolin', 'Curitiba', 'PARANÁ', '-25.4521964', '-49.2618287');
 
 insert into tb_empresa(cnpj, nome, telefone, endereco, email, dominio,  tipo, horario_abertura, horario_encerramento)
 values('12345', 'Wise Systems', '123456', '81020-520', 'wisessystem@wises.com.br', 'wises.com.br', 'MATRIZ', '1950-01-01 08:00:00', '3000-12-31 19:00:00');
 
 insert into tb_endereco(cep, logradouro, cidade, estado, latitude, longitude)
-values('94043', 'Amphitheatre Pkwy', 'Mountain View', 'Ca', '37.422387', '-122.084047');
+values('94043', 'Amphitheatre Pkwy', 'Mountain View', 'EXTERIOR', '37.422387', '-122.084047');
 
 insert into tb_empresa(cnpj, nome, telefone, endereco, email, dominio, tipo)
 values('111', 'Google Inc.', '654321', '94043', 'googleUsa@googlegroup.com', 'googlegroup.com', 'MATRIZ');
 
 insert into tb_endereco(cep, logradouro, cidade, bairro, estado, latitude, longitude)
-values('04538-133', 'Avenida Brigadeiro Faria', 'Sao Paulo', 'Itaim Bibi', 'Sp', '-23.586334', '-46.681897');
+values('04538-133', 'Avenida Brigadeiro Faria', 'Sao Paulo', 'Itaim Bibi', 'SÃO_PAULO', '-23.586334', '-46.681897');
 
 insert into tb_empresa(cnpj, nome, telefone, endereco, email, dominio,  tipo)
 values('222', 'Google Brasil', '40028922', '04538-133', 'googleBR@googlegroup.com.', 'googlegroup.com', 'FILIAL');
@@ -111,7 +110,7 @@ set id_filial = '222'
 where tb_empresa.cnpj like '111';
 
 insert into tb_endereco(cep, logradouro, cidade, bairro, estado, latitude, longitude)
-values('83055-9000', 'Avenida Rui Barbosa', 'Sao Jose dos Pinhais', 'Afonso Pena', 'Pr', '-25.501428', '-49.170489');
+values('83055-9000', 'Avenida Rui Barbosa', 'Sao Jose dos Pinhais', 'Afonso Pena', 'PARANÁ', '-25.501428', '-49.170489');
 
 insert into tb_empresa(cnpj, nome, telefone, endereco, email, dominio,  tipo)
 values('4321', 'Boticario', '(41) 3375-7001', '83055-9000', 'boticario@grupoboticario.com.br', 'grupoboticario.com.br', 'MATRIZ');
