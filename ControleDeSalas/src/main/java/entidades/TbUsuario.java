@@ -42,6 +42,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TbUsuario.findByUltimaModificacao", query = "SELECT t FROM TbUsuario t WHERE t.ultimaModificacao = :ultimaModificacao")})
 public class TbUsuario implements Serializable {
 
+    @JoinColumn(name = "empresa_cnpj", referencedColumnName = "cnpj")
+    @ManyToOne
+    private TbEmpresa empresaCnpj;
+
     private static final long serialVersionUID = 1L;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Id
@@ -203,6 +207,14 @@ public class TbUsuario implements Serializable {
     @Override
     public String toString() {
         return "entidades.TbUsuario[ email=" + email + " ]";
+    }
+
+    public TbEmpresa getEmpresaCnpj() {
+        return empresaCnpj;
+    }
+
+    public void setEmpresaCnpj(TbEmpresa empresaCnpj) {
+        this.empresaCnpj = empresaCnpj;
     }
     
 }

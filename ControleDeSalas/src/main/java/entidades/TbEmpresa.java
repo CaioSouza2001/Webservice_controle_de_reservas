@@ -48,6 +48,16 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TbEmpresa.findByAtivo", query = "SELECT t FROM TbEmpresa t WHERE t.ativo = :ativo")})
 public class TbEmpresa implements Serializable {
 
+    @JoinColumn(name = "matriz_cnpj", referencedColumnName = "cnpj")
+    @ManyToOne
+    private TbEmpresa matrizCnpj;
+    @JoinColumn(name = "id_filial_cnpj", referencedColumnName = "cnpj")
+    @ManyToOne
+    private TbEmpresa idFilialCnpj;
+    @JoinColumn(name = "matriz", referencedColumnName = "cnpj")
+    @ManyToOne
+    private TbEmpresa matriz;
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -332,6 +342,30 @@ public class TbEmpresa implements Serializable {
     @Override
     public String toString() {
         return "entidades.TbEmpresa[ cnpj=" + cnpj + " ]";
+    }
+
+    public TbEmpresa getMatrizCnpj() {
+        return matrizCnpj;
+    }
+
+    public void setMatrizCnpj(TbEmpresa matrizCnpj) {
+        this.matrizCnpj = matrizCnpj;
+    }
+
+    public TbEmpresa getIdFilialCnpj() {
+        return idFilialCnpj;
+    }
+
+    public void setIdFilialCnpj(TbEmpresa idFilialCnpj) {
+        this.idFilialCnpj = idFilialCnpj;
+    }
+
+    public TbEmpresa getMatriz() {
+        return matriz;
+    }
+
+    public void setMatriz(TbEmpresa matriz) {
+        this.matriz = matriz;
     }
     
 }

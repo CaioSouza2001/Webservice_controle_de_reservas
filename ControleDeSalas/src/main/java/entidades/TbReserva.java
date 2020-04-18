@@ -43,12 +43,20 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "TbReserva.findByTitulo", query = "SELECT t FROM TbReserva t WHERE t.titulo = :titulo and t.ativo=1")})
 public class TbReserva implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @Column(name = "id_reserva")
+    private Integer idReserva;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "id")
-    private Integer id;
+    private int id;
+    @JoinColumn(name = "id_organizador_email", referencedColumnName = "email")
+    @ManyToOne
+    private TbUsuario idOrganizadorEmail;
+
+    private static final long serialVersionUID = 1L;
     @Column(name = "horario_inicio")
     @Temporal(TemporalType.TIMESTAMP)
     private Date horarioInicio;
@@ -106,13 +114,6 @@ public class TbReserva implements Serializable {
         this.titulo = titulo;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public Date getHorarioInicio() {
         return horarioInicio;
@@ -227,6 +228,64 @@ public class TbReserva implements Serializable {
     @Override
     public String toString() {
         return "entidades.TbReserva[ id=" + id + " ]";
+    }
+
+    public TbReserva(Integer idReserva) {
+        this.idReserva = idReserva;
+    }
+
+    public TbReserva(Integer idReserva, int id) {
+        this.idReserva = idReserva;
+        this.id = id;
+    }
+
+    public Integer getIdReserva() {
+        return idReserva;
+    }
+
+    public void setIdReserva(Integer idReserva) {
+        this.idReserva = idReserva;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public TbUsuario getIdOrganizadorEmail() {
+        return idOrganizadorEmail;
+    }
+
+    public void setIdOrganizadorEmail(TbUsuario idOrganizadorEmail) {
+        this.idOrganizadorEmail = idOrganizadorEmail;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (idReserva != null ? idReserva.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof TbReserva)) {
+            return false;
+        }
+        TbReserva other = (TbReserva) object;
+        if ((this.idReserva == null && other.idReserva != null) || (this.idReserva != null && !this.idReserva.equals(other.idReserva))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "entidades.TbReserva[ idReserva=" + idReserva + " ]";
     }
     
 }

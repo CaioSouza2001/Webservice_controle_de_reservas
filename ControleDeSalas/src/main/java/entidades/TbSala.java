@@ -51,12 +51,20 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TbSala.findByAtivo", query = "SELECT t FROM TbSala t WHERE t.ativo = :ativo")})
 public class TbSala implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @Column(name = "id_sala")
+    private Integer idSala;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "id")
-    private Integer id;
+    private int id;
+    @JoinColumn(name = "empresa_cnpj", referencedColumnName = "cnpj")
+    @ManyToOne
+    private TbEmpresa empresaCnpj;
+
+    private static final long serialVersionUID = 1L;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -123,13 +131,6 @@ public class TbSala implements Serializable {
         this.ativo = ativo;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getNome() {
         return nome;
@@ -277,6 +278,64 @@ public class TbSala implements Serializable {
     @Override
     public String toString() {
         return "entidades.TbSala[ id=" + id + " ]";
+    }
+
+    public TbSala(Integer idSala) {
+        this.idSala = idSala;
+    }
+
+    public TbSala(Integer idSala, int id) {
+        this.idSala = idSala;
+        this.id = id;
+    }
+
+    public Integer getIdSala() {
+        return idSala;
+    }
+
+    public void setIdSala(Integer idSala) {
+        this.idSala = idSala;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public TbEmpresa getEmpresaCnpj() {
+        return empresaCnpj;
+    }
+
+    public void setEmpresaCnpj(TbEmpresa empresaCnpj) {
+        this.empresaCnpj = empresaCnpj;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (idSala != null ? idSala.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof TbSala)) {
+            return false;
+        }
+        TbSala other = (TbSala) object;
+        if ((this.idSala == null && other.idSala != null) || (this.idSala != null && !this.idSala.equals(other.idSala))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "entidades.TbSala[ idSala=" + idSala + " ]";
     }
     
 }

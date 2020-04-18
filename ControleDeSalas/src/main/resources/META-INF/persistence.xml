@@ -7,6 +7,16 @@
     <class>entidades.TbUsuario</class>
     <class>entidades.TbReserva</class>
     <class>entidades.TbEndereco</class>
+    <class>ent.TbEmpresa</class>
+    <class>ent.TbReserva</class>
+    <class>ent.TbSala</class>
+    <class>ent.TbUsuario</class>
+    <class>ent.TbEndereco</class>
+    <class>ent.Reserva</class>
+    <class>ent.Usuario</class>
+    <class>ent.Endereco</class>
+    <class>ent.Empresa</class>
+    <class>ent.Sala</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>NONE</shared-cache-mode>
     <properties>

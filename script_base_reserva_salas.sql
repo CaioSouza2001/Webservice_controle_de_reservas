@@ -33,9 +33,7 @@ create table tb_empresa
 constraint pk_tb_empresa primary key (cnpj),
 constraint fk_tb_empresa_tb_filial foreign key (id_filial) references tb_empresa (cnpj),
 constraint fk_tb_empresa_tb_endereco foreign key (endereco) references tb_endereco (cep)
-
 );
-
 create table tb_sala
 (
 	id_sala int auto_increment,
@@ -62,6 +60,7 @@ create table tb_usuario
     nome varchar (200) not null,
     senha varchar(500) not null,
     cnpj_empresa varchar (200) not null,
+    empresa_gerenciada varchar(200),
 	ativo tinyint(1) default '1' not null,
     criacao datetime default current_timestamp not null ,
     ultima_modificacao datetime default current_timestamp not null ,
@@ -69,6 +68,7 @@ create table tb_usuario
 constraint pk_tb_usuario primary key (email),
 constraint pk_tb_usuario foreign key (cnpj_empresa) references tb_empresa (cnpj)
 );
+
 create table tb_reserva
 (
 	id_reserva int auto_increment,
@@ -147,6 +147,20 @@ select * from tb_usuario;
 select @@global.time_zone, @@session.time_zone;
 
 select * from tb_sala;
+/*
+	2020-03-17 13:00 - 17:00
+*/
+
+select now();
+
+select * from tb_reserva where id_sala = 1 and (
+(horario_inicio >= INICIO and previsao_termino <= FIM) or
+(horario_inicio < INICIO and previsao_termino <= FIM
+and previsao_termino > INICIO) or
+(horario_inicio > INICIO and horario_inicio < FIM
+and previsao_termino > FIM) or
+(horario_inicio < INICIO and previsao_termino > FIM) );
+
 select * from tb_reserva;
 
 select max(tb_reserva.horario_inicio) from tb_reserva;	

@@ -1,6 +1,6 @@
 package database;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
+import javafx.scene.control.skin.VirtualFlow;
 import entidades.TbEmpresa;
 import entidades.TbEndereco;
 import entidades.TbReserva;
